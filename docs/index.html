@@ -213,7 +213,7 @@
                 raster = new paper.Raster();
                 raster.image = img;
                 raster.bounds.point = new paper.Point(0, 0);
-                raster.selected = true;
+                raster.smoothing = 'off';
 
                 if(blobPath != null) {
                     blobPath.remove();
