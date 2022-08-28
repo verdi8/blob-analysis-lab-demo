@@ -49,8 +49,8 @@
                     <div class="card-body">
                         <p><span class="badge rounded-pill text-bg-primary">4</span> Entourer le blob en dessinant avec la souris.</p>
                         <p class="text-muted">Aire du blob : <span id="bl-area">...</span> cm².</p>
-                        <button id="bl-undo-blob" type="button" class="btn btn-primary">Undo</button>
-                        <button id="bl-clear-blob" type="button" class="btn btn-primary">Effacer</button>
+                        <button id="bl-undo-blob" type="button" class="btn btn-primary">Défaire</button>
+                        <button id="bl-clear-blob" type="button" class="btn btn-primary">Effacer tout</button>
                     </div>
                 </div>
             </div>
@@ -140,6 +140,12 @@
             paper.view.draw();
         }
 
+        let undoBlobPath = function () {
+            if(blobPath != null && blobPath.segments.length > 0) {
+                blobPath.removeSegments(Math.max(blobPath.segments.length - 5, 0));
+            }
+        }
+
         let updateMeasures = function () {
             document.getElementById("bl-resolution").innerText = ruler.resolution;
             document.getElementById("bl-area").innerText = (blobPath.area / ruler.resolution).toString();
@@ -159,9 +165,7 @@
             }
         });
         document.getElementById("bl-undo-blob").addEventListener("click",  (event) => {
-            if(blobPath != null && blobPath.segments.length > 0) {
-                blobPath.removeSegment(blobPath.segments.length -1);
-            }
+            undoBlobPath();
         });
 
         document.getElementById("bl-canvas").addEventListener('wheel', (event) => {
@@ -224,6 +228,7 @@
                 raster.onMouseDrag = function (event) {
                     if (!event.modifiers.shift) { // Epêche de dessiner lors du déplacement de la vue
                         blobPath.add(event.point);
+                        blobPath.smooth({ type: 'continuous' });
                         updateMeasures();
                     }
                 }
