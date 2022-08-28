@@ -222,8 +222,10 @@
                 blobPath.strokeColor = "yellow";
                 blobPath.strokeWidth = 5;
                 raster.onMouseDrag = function (event) {
-                    blobPath.add(event.point);
-                    updateMeasures();
+                    if (!event.modifiers.shift) { // Epêche de dessiner lors du déplacement de la vue
+                        blobPath.add(event.point);
+                        updateMeasures();
+                    }
                 }
                 fitWiew();
                 ruler = new Ruler(raster);
