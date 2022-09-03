@@ -19,6 +19,23 @@ module.exports = {
             {
                 test: /\.svg$/,
                 use: 'svg-inline-loader?classPrefix=true'
+            },
+            {
+                test: /\.scss$/,
+                use: [
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            sourceMap: true
+                        }
+                    },
+                    {
+                        loader: 'resolve-url-loader'
+                    },
+                    {
+                        loader: 'sass-loader'
+                    }
+                ]
             }
         ]
     },

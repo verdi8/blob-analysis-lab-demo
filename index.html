@@ -7,9 +7,12 @@
 </head>
 <body>
 <div class="container-fluid vh-100">
-    <nav class="row navbar bg-light">
+    <nav class="navbar bg-light">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1"><%= htmlWebpackPlugin.options.title %></span>
+            <a class="navbar-brand" href="#">
+                <i class="fa-solid fa-flask mr-1"></i>
+                <%= htmlWebpackPlugin.options.title %>
+            </a>
         </div>
     </nav>
 
@@ -23,7 +26,7 @@
                 <div class="card mb-2">
                     <div class="card-body">
                         <div class="mb-3">
-                            <label for="bl-picture-file" class="form-label"><span class="badge rounded-pill text-bg-primary">1</span> Charger une photo de blob</label>
+                            <label for="bl-picture-file" class="form-label"><i class="fa-solid fa-1 mr-1 text-primary"></i>Charger une photo de blob</label>
                             <input class="form-control" type="file" id="bl-picture-file">
                         </div>
 
@@ -32,24 +35,26 @@
 
                 <div class="card mb-2">
                     <div class="card-body">
-                        <p><span class="badge rounded-pill text-bg-primary">2</span>
-                            Shift + Roulette : zoomer. Shift + Click : déplacer la photographie.</p>
-                        <button id="bl-fit-view" type="button" class="btn btn-primary">Recentrer</button>
-                        <button id="bl-reset-view" type="button" class="btn btn-primary">1:1</button>
-                    </div>
-                </div>
-                <div class="card mb-2">
-                    <div class="card-body">
-                        <p><span class="badge rounded-pill text-bg-primary">3</span> Ajuster la règle (couvrir 9 cm).</p>
+                        <p><i class="fa-solid fa-2 mr-1 text-primary"></i>Ajuster la règle (couvrir 9 cm).</p>
                         <span class="text-muted">Résolution : <span id="bl-resolution">...</span> pixels par cm².</span>
                     </div>
                 </div>
                 <div class="card mb-2">
                     <div class="card-body">
-                        <p><span class="badge rounded-pill text-bg-primary">4</span> Entourer le blob en dessinant avec la souris.</p>
+                        <p><i class="fa-solid fa-3 mr-1 text-primary"></i>Entourer le blob en dessinant avec la souris.</p>
                         <p class="text-muted">Aire du blob : <span id="bl-area">...</span> cm².</p>
-                        <button id="bl-undo-blob" type="button" class="btn btn-primary">Défaire</button>
+                        <button id="bl-undo-blob" type="button" class="btn btn-primary"><i class="fa-solid fa-arrow-left"></i></button>
                         <button id="bl-clear-blob" type="button" class="btn btn-primary">Effacer tout</button>
+                    </div>
+                </div>
+
+
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <p><i class="fa-solid fa-circle-info mr-1 text-black-50"></i>
+                            Shift + Roulette : zoomer. Shift + Click : déplacer la photographie.</p>
+                        <button id="bl-fit-view" type="button" class="btn btn-primary">Recentrer</button>
+                        <button id="bl-reset-view" type="button" class="btn btn-primary">1:1</button>
                     </div>
                 </div>
             </div>
