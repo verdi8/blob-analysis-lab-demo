@@ -17,10 +17,28 @@ import * as paper from "paper";
 // Create an empty project and a view for the canvas:
 paper.install(window);
 
-
 /**
  * Le lab
  */
 class Lab {
 
+    private scaleDisplayElement : HTMLElement;
+    private areaDisplayElement : HTMLElement;
+
+    constructor(scaleDisplayElement : HTMLElement, areaDisplayElement : HTMLElement) {
+        this.scaleDisplayElement = scaleDisplayElement;
+        this.areaDisplayElement = areaDisplayElement;
+    }
+
 }
+
+
+// Pour se déclarer en global au navigateur
+declare global {
+    interface Window { lab:  (scaleDisplayElement : HTMLElement, areaDisplayElement : HTMLElement) => Lab; }
+}
+
+window.lab = (scaleDisplayElement : HTMLElement, areaDisplayElement : HTMLElement) => {
+    return new Lab(scaleDisplayElement, areaDisplayElement);
+}
+

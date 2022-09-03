@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +10,7 @@
     <nav class="navbar bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-                <i class="fa-solid fa-flask mr-1"></i>
+                <i class="fa-solid fa-flask me-1"></i>
                 <%= htmlWebpackPlugin.options.title %>
             </a>
         </div>
@@ -26,37 +26,40 @@
                 <div class="card mb-2">
                     <div class="card-body">
                         <div class="mb-3">
-                            <label for="bl-picture-file" class="form-label"><i class="fa-solid fa-1 mr-1 text-primary"></i>Charger une photo de blob</label>
+                            <label for="bl-picture-file" class="form-label"><i class="fa-solid fa-1 me-1 text-primary"></i>Charger une photo de blob</label>
                             <input class="form-control" type="file" id="bl-picture-file">
                         </div>
-
-                    </div>
-                </div>
-
-                <div class="card mb-2">
-                    <div class="card-body">
-                        <p><i class="fa-solid fa-2 mr-1 text-primary"></i>Ajuster la règle (couvrir 9 cm).</p>
-                        <span class="text-muted">Résolution : <span id="bl-resolution">...</span> pixels par cm².</span>
+                        <p><i class="fa-solid fa-circle-info me-1 text-black-50"></i>Roulette : zoomer. Shift + Click : déplacer la photographie.</p>
+                        <button id="bl-fit-view" type="button" class="btn btn-primary">Recentrer</button>
+                        <button id="bl-reset-view" type="button" class="btn btn-primary">1:1</button>
                     </div>
                 </div>
                 <div class="card mb-2">
                     <div class="card-body">
-                        <p><i class="fa-solid fa-3 mr-1 text-primary"></i>Entourer le blob en dessinant avec la souris.</p>
-                        <p class="text-muted">Aire du blob : <span id="bl-area">...</span> cm².</p>
+                        <p><i class="fa-solid fa-2 me-1 text-primary"></i>Ajuster la règle (couvrir 9 cm).</p>
+<!--                        <span class="text-muted">Résolution : <span id="bl-resolution">...</span> pixels par cm².</span>-->
+                    </div>
+                </div>
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <p><i class="fa-solid fa-3 me-1 text-primary"></i>Entourer le blob en dessinant avec la souris.</p>
                         <button id="bl-undo-blob" type="button" class="btn btn-primary"><i class="fa-solid fa-arrow-left"></i></button>
                         <button id="bl-clear-blob" type="button" class="btn btn-primary">Effacer tout</button>
                     </div>
                 </div>
 
-
                 <div class="card mb-2">
                     <div class="card-body">
-                        <p><i class="fa-solid fa-circle-info mr-1 text-black-50"></i>
-                            Shift + Roulette : zoomer. Shift + Click : déplacer la photographie.</p>
-                        <button id="bl-fit-view" type="button" class="btn btn-primary">Recentrer</button>
-                        <button id="bl-reset-view" type="button" class="btn btn-primary">1:1</button>
+                        <p><i class="fa-solid fa-calculator me-1 text-black-50"></i>Analyse</p>
+                        <dl class="row">
+                            <dt class="col-sm-6">Résolution</dt>
+                            <dd class="col-sm-6"><span id="bl-resolution">...</span>&nbsp;pixels par cm²</dd>
+                            <dt class="col-sm-6">Surface du blob</dt>
+                            <dd class="col-sm-6"><span id="bl-area">...</span>&nbsp;cm²</dd>
+                        </dl>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -64,6 +67,7 @@
 
 </div>
 <script>
+
 
     function Ruler(raster) {
         let that = this;
@@ -98,7 +102,7 @@
             }
             this.rulerGroup.strokeWidth = 5;
             this.rulerGroup.strokeColor = 'red';
-            this.resolution = Math.pow(vector.length / this.tickCount, 2);
+            this.resolution = Math.round(Math.pow(vector.length / this.tickCount, 2));
             paper.view.draw();
             this.onChange();
         };
@@ -116,6 +120,11 @@
         paper.setup(canvas);
 
         let tool = new Tool();
+
+        let lab = window.lab(
+            document.getElementById('bl-resolution'),
+            document.getElementById('bl-area')
+    );
 
         // Contient la photo
         let raster = null;
@@ -150,7 +159,7 @@
 
         let updateMeasures = function () {
             document.getElementById("bl-resolution").innerText = ruler.resolution;
-            document.getElementById("bl-area").innerText = (blobPath.area / ruler.resolution).toString();
+            document.getElementById("bl-area").innerText = (Math.round(100 * Math.abs(blobPath.area / ruler.resolution)) / 100).toString();
         }
 
         // Ajout de l'interactivité
