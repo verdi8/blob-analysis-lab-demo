@@ -37,7 +37,6 @@
                 <div class="card mb-2">
                     <div class="card-body">
                         <p><i class="fa-solid fa-2 me-1 text-primary"></i>Ajuster la règle (couvrir 9 cm).</p>
-<!--                        <span class="text-muted">Résolution : <span id="bl-resolution">...</span> pixels par cm².</span>-->
                     </div>
                 </div>
                 <div class="card mb-2">
@@ -57,6 +56,7 @@
                             <dt class="col-sm-6">Surface du blob</dt>
                             <dd class="col-sm-6"><span id="bl-area">...</span>&nbsp;cm²</dd>
                         </dl>
+                        <button id="bl-download-mask" type="button" class="btn btn-primary">Télécharger le masque</button>
                     </div>
                 </div>
 
@@ -67,8 +67,6 @@
 
 </div>
 <script>
-
-
     function Ruler(raster) {
         let that = this;
         this.handleCircle1 = new paper.Path.Circle(new Point(raster.position.x - raster.image.naturalWidth * 0.4, raster.position.y), 20);
@@ -106,6 +104,16 @@
             paper.view.draw();
             this.onChange();
         };
+        this.hide = function () {
+            this.rulerGroup.visible = false;
+            this.handleCircle1.visible = false;
+            this.handleCircle2.visible = false;
+        }
+        this.show = function () {
+            this.rulerGroup.visible = true;
+            this.handleCircle1.visible = true;
+            this.handleCircle2.visible = true;
+        }
         this.onChange = function() { };
         this.redraw();
     };
@@ -124,7 +132,7 @@
         let lab = window.lab(
             document.getElementById('bl-resolution'),
             document.getElementById('bl-area')
-    );
+        );
 
         // Contient la photo
         let raster = null;
@@ -162,7 +170,31 @@
             document.getElementById("bl-area").innerText = (Math.round(100 * Math.abs(blobPath.area / ruler.resolution)) / 100).toString();
         }
 
-        // Ajout de l'interactivité
+        let downloadMask = function () {
+            ruler.hide();
+            let mask = blobPath.clone();
+            mask.fillColor = "black";
+            mask.strokeColor = "black";
+            blobPath.visible = false;
+            raster.visible = false;
+
+            paper.view.draw();
+
+            let anchor = document.createElement("a");
+            anchor.href = canvas.toDataURL("image/png");
+            anchor.download = "mask.png";
+            anchor.click();
+
+            ruler.show();
+            mask.remove();
+            blobPath.visible = true;
+            raster.visible = true;
+
+            paper.view.draw();
+        }
+
+
+        // Ajout de l'intéractivité
 
         document.getElementById("bl-fit-view").addEventListener("click",  (event) => {
             fitWiew();
@@ -217,7 +249,6 @@
             event.preventDefault();
         }
 
-
         document.getElementById("bl-picture-file").onchange = (e) => {
             const img = new Image();
             img.src = URL.createObjectURL(e.target.files[0]);
@@ -252,7 +283,9 @@
             }
         };
 
-
+        document.getElementById("bl-download-mask").addEventListener("click",  (event) => {
+            downloadMask();
+        });
     }
 
 </script>
