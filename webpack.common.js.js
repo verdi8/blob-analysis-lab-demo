@@ -3,7 +3,7 @@ const webpackCommonJs = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: './src/index.ts',
+    entry: './src/index.tsx',
     module: {
         rules: [
             {
@@ -11,18 +11,21 @@ module.exports = {
                 use: 'ts-loader',
                 exclude: /node_modules/,
             },
-            {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader'],
-                // exclude: /node_modules/
-            },
+            // {
+            //     test: /\.css$/,
+            //     use: ['style-loader', 'css-loader'],
+            //     // exclude: /node_modules/
+            // },
             {
                 test: /\.svg$/,
                 use: 'svg-inline-loader?classPrefix=true'
             },
             {
-                test: /\.scss$/,
+                test: /\.(css|scss)$/,
                 use: [
+                    {
+                        loader: 'style-loader',
+                    },
                     {
                         loader: 'css-loader',
                         options: {
@@ -40,7 +43,7 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.css', '.js', '.ts']
+        extensions: ['.css', '.js', '.ts', '.tsx']
     },
     plugins: [
         new HtmlWebpackPlugin({
