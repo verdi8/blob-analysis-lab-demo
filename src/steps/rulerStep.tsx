@@ -1,15 +1,18 @@
-import {Step, StepProps} from "./step";
+import {Step, StepProps, StepState} from "./step";
 import * as React from "react";
-import {Button} from "react-bootstrap";
-import {Ruler} from "../instruments/ruler";
+import {Alert, Button} from "react-bootstrap";
 
 /**
  * Etape de placement de la règle
  */
-export class RulerStep extends Step {
+export class RulerStep extends Step<StepState> {
 
     public constructor(props : StepProps) {
-        super(props);
+        super(props, { active: false, activable : false });
+    }
+
+    canBeActivated(): boolean {
+        return this.props.lab.data != null;
     }
 
     onActivation(): void {
@@ -22,14 +25,13 @@ export class RulerStep extends Step {
     }
 
     private zoomOnRuler() : void {
-        if(this.props.lab.ruler.coords != null) {
-            this.props.lab.zoomIn(this.props.lab.ruler.coords.getMiddle());
-        }
+        this.props.lab.zoomIn(this.props.lab.data.rulerCoords.bounds().center);
     }
 
     render() : React.ReactNode {
         return <div>
             <div>
+                <Alert show={!this.state.activable} variant="warning" className={"p-1"}>Veuillez charger une photo.</Alert>
                 <p>Positionnez la règle sur la photo. La règle doit couvrir 9 cm.</p>
                 <p>Appuyez ici <Button disabled={!this.state.active} onClick={this.zoomOnRuler.bind(this)} size={"sm"}><i className={"fa-solid fa-magnifying-glass-location"}></i></Button> pour placer la règle avec précision.</p>
                 <Button variant={"success"} disabled={!this.state.active} onClick={this.terminate.bind(this)}>Terminé !</Button>

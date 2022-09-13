@@ -50,6 +50,7 @@ module.exports = {
             title: 'Blob Analysis Lab Demo',
             template: 'index.html',
             scriptLoading: 'blocking',
+            favicon: "favicon.ico"
         }),
         new webpackCommonJs.DefinePlugin({
             VERSION: JSON.stringify(require("./package.json").version),

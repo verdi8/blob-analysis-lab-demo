@@ -1,27 +1,33 @@
-import {Step, StepProps} from "./step";
+import {Step, StepProps, StepState} from "./step";
 import * as React from "react";
 import {ChangeEvent} from "react";
 
 /**
  * Etape de chargement du fichier
  */
-export class LoadPictureStep extends Step {
+export class LoadPictureStep extends Step<StepState> {
 
     public constructor(props : StepProps) {
-        super(props);
+        super(props, { active: true, activable : false });
     }
 
     private fileChanged(event : ChangeEvent<HTMLInputElement>) : boolean {
         if(event.target.files != null) {
             const img = new Image();
-            img.src = URL.createObjectURL(event.target.files[0]);
+            const file = event.target.files[0];
+            img.src = URL.createObjectURL(file);
+            let filename = file.name;
             let that = this;
             img.onload = function () {
-                if(that.props.lab.new(img)) {
+                if(that.props.lab.new(img, filename)) {
                     that.terminate();
                 }
             }
         }
+        return true;
+    }
+
+    canBeActivated(): boolean {
         return true;
     }
 

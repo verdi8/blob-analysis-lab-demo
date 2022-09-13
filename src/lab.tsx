@@ -3,16 +3,31 @@ import * as paper from "paper";
 import {StepManager} from "./steps/stepManager";
 import {LoadPictureStep} from "./steps/loadPictureStep";
 import {RulerStep} from "./steps/rulerStep";
-import {Button, ButtonGroup, Container, Form, InputGroup, Nav, Navbar, NavDropdown, Row} from "react-bootstrap";
+import {Button, ButtonGroup, Container, Form, Navbar, Row} from "react-bootstrap";
 import {Ruler} from "./instruments/ruler";
 import {PlacePetriDishStep} from "./steps/placePetriDishStep";
 import {PetriDish} from "./instruments/petriDish";
 import {DrawBlobMaskStep} from "./steps/drawBlobMaskStep";
 import {BlobMask} from "./instruments/blobMask";
-import {view} from "paper";
+import {VectorCoords} from "./data/coords/vectorCoords";
+import {CircleCoords} from "./data/coords/circleCoords";
+import {PathCoords} from "./data/coords/pathCoords";
+import {DownloadStep} from "./steps/downloadStep";
+import {PaperUtils} from "./utils/paperUtils";
 
 export interface LabData {
-    pictureSize : paper.Size;
+
+    pictureSize : paper.Size,
+
+    filename : string,
+
+    rulerTickCount : number,
+
+    rulerCoords : VectorCoords,
+
+    petriDishCoords : CircleCoords,
+
+    blobMaskCoords : PathCoords
 }
 
 
@@ -53,9 +68,6 @@ export class Lab extends React.Component<{}> {
 
     public constructor(props : {}) {
         super(props);
-        this.ruler = new Ruler(this);
-        this.petriDish = new PetriDish(this);
-        this.blobMask = new BlobMask(this);
     }
 
     /**
@@ -67,6 +79,38 @@ export class Lab extends React.Component<{}> {
         }
 
         paper.setup(this.canvas);
+        new paper.Tool();
+        paper.tool.activate();
+
+        // Ajout du zoom avec la molette
+        this.canvas.addEventListener('wheel', (event) => {
+            let target = paper.view.viewToProject(new paper.Point(event.offsetX, event.offsetY));
+            if (event.deltaY > 0) {
+                this.zoomOut(target);
+            } else {
+                this.zoomIn(target);
+            }
+        });
+
+        // Ajout des déplacements
+        paper.tool.onKeyDown = (event : paper.KeyEvent) => {
+            if(event.key == "control") {
+                PaperUtils.changeCursor("move");
+            }
+        }
+        paper.tool.onKeyUp = (event : paper.KeyEvent) => {
+            if(event.key == "control") {
+                PaperUtils.changeCursor(null);
+            }
+        }
+        paper.tool.onMouseDrag = function(event) {
+            if(event.modifiers.control) {
+                let delta = event.point.subtract(event.downPoint);
+                paper.view.center = paper.view.center.subtract(delta);
+                event.preventDefault();
+            }
+        }
+
 
         // this.canvas.width  = this.canvas.offsetWidth;
         // this.canvas.height = this.canvas.offsetHeight;
@@ -75,7 +119,7 @@ export class Lab extends React.Component<{}> {
     /**
      * Lance une nouvelle session de travail
      */
-    public new(image : HTMLImageElement) : boolean {
+    public new(image : HTMLImageElement, filename : string) : boolean {
         console.info("Nouvelle session de travail")
         if(this.raster != null) {
             if(window.confirm("Écraser le travail en cours ?")) {
@@ -92,9 +136,28 @@ export class Lab extends React.Component<{}> {
         this.raster.smoothing = 'off';
 
         // Init des données
+        let width = image.naturalWidth;
+        let height = image.naturalHeight;
         this.data = {
-            pictureSize : new paper.Size(image.naturalWidth, image.naturalHeight)
+
+            pictureSize: new paper.Size(width, height),
+
+            filename: filename,
+
+            rulerTickCount : 9,
+
+            rulerCoords: new VectorCoords(new paper.Point(width * 0.25, height / 2), new paper.Point(width * 0.75, height / 2)),
+
+            petriDishCoords: new CircleCoords(new paper.Point(width / 2, height / 2), width * 0.75 / 2),
+
+            blobMaskCoords: new PathCoords(new paper.Path()),
+
         };
+
+        // Le plus en dessous en premier
+        this.blobMask = new BlobMask(this, this.data.blobMaskCoords);
+        this.petriDish = new PetriDish(this, this.data.petriDishCoords);
+        this.ruler = new Ruler(this, this.data.rulerCoords, this.data.rulerTickCount);
 
         // Zoom global
         this.zoomFit();
@@ -220,15 +283,16 @@ export class Lab extends React.Component<{}> {
             </Navbar>
             <Row className="flex-grow-1">
                 <div className="col">
-                    <canvas ref={(canvas : HTMLCanvasElement)=> this.canvas = canvas} data-paper-resize="true"  className="h-100 w-100 d-block" onContextMenu={() => false}></canvas>
+                    <canvas ref={(canvas : HTMLCanvasElement)=> this.canvas = canvas} data-paper-resize="false"  className="h-100 w-100 d-block" onContextMenu={() => false}></canvas>
                 </div>
                 <div className="col-md-4 border-2">
                     <div className="mb-3">
                         <StepManager>
-                            <LoadPictureStep lab={this} code="loadPictureStep" title="Charger une photo"/>
-                            <RulerStep lab={this} code="placeRulerStep" title="Positionner la règle"/>
+                            <LoadPictureStep lab={this} code="loadPicture" title="Charger une photo"/>
+                            <RulerStep lab={this} code="placeRuler" title="Positionner la règle"/>
                             <PlacePetriDishStep  lab={this} code="placePetriDish" title="Positionner la boîte de petri"/>
                             <DrawBlobMaskStep  lab={this} code="drawBlobMask" title="Détourer le blob"/>
+                            <DownloadStep  lab={this} code="download" title="Télécharger les résultats"/>
                         </StepManager>
                     </div>
                 </div>

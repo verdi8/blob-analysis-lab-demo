@@ -1,7 +1,7 @@
 /**
  * Gestion des étapes
  */
-import {Step} from "./step";
+import {Step, StepState} from "./step";
 import * as React from "react";
 import {ReactElement, RefObject} from "react";
 import {ArrayUtils} from "../utils/arrayUtils";
@@ -18,7 +18,7 @@ interface StepManagerProps {
  * L'état d'affichage du StepManager
  */
 interface StepManagerState {
-    activeStep : Step | null
+    activeStep : Step<StepState> | null
 }
 
 /**
@@ -26,7 +26,7 @@ interface StepManagerState {
  */
 export class StepManager extends React.Component<StepManagerProps, StepManagerState> {
 
-    private steps : Step[] = [];
+    private steps : Step<StepState>[] = [];
 
     /**
      * Création du StepManager
@@ -47,14 +47,18 @@ export class StepManager extends React.Component<StepManagerProps, StepManagerSt
     /**
      * Active une étape
      */
-    private activateStep(step : Step) {
+    private activateStep(step : Step<StepState>) {
         let previousStep = this.state.activeStep;
         if(step != previousStep) {
             this.setState( { activeStep : step }, () => {
-                if(previousStep != null) {
+                if(previousStep != null && previousStep.state.active) {
                     previousStep.deactivate();
                 }
-                step.activate();
+                if(step.canBeActivated()) {
+                    step.activate();
+                } else {
+                    step.markInactivable();
+                }
             });
         }
     }
@@ -63,7 +67,7 @@ export class StepManager extends React.Component<StepManagerProps, StepManagerSt
      * Déclenché lors qu'un StepComponent est terminé.
      * Active le composant suivant
      */
-    private onStepTerminated(step : Step) : void {
+    private onStepTerminated(step : Step<StepState>) : void {
         console.info("[StepManager] Étape " + step.props.code + " terminée")
         let nextStep = ArrayUtils.nextItem(this.steps, step);
         if(nextStep != null) {
@@ -74,14 +78,14 @@ export class StepManager extends React.Component<StepManagerProps, StepManagerSt
     /**
      * Donne un step à partir de son code
      */
-    private getStepByCode(code : string) : Step | null {
+    private getStepByCode(code : string) : Step<StepState> | null {
         return this.steps.find((s) => s.props.code == code) ?? null;
     }
 
     /**
      * Enregistre un Step ajouté au StepManager
      */
-    private registerStep(index : number, step : Step) : void {
+    private registerStep(index : number, step : Step<StepState>) : void {
         // Ajout du hook : lorsqu'un étape est terminée, on active la suivante
         step.onTerminated = this.onStepTerminated.bind(this);
         this.steps[index] = step;
@@ -97,7 +101,7 @@ export class StepManager extends React.Component<StepManagerProps, StepManagerSt
                     return <Accordion.Item  eventKey={ child.props.code }>
                         <Accordion.Header><i className={"fa-solid fa-" + (index + 1) + " me-1 text-primary"}></i>{child.props.title}</Accordion.Header>
                         <Accordion.Body>
-                            {React.cloneElement(child, {ref: (step : Step) => {  if(step != null) this.registerStep(index, step) }})}
+                            {React.cloneElement(child, {ref: (step : Step<StepState>) => {  if(step != null) this.registerStep(index, step) }})}
                         </Accordion.Body>
                     </Accordion.Item>
                 })

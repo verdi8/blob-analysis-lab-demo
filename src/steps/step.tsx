@@ -15,18 +15,19 @@ export interface StepProps {
  */
 export interface StepState {
     active : boolean,
+    activable : boolean
 }
 
 /**
  * Une étape du process
  */
-export abstract class Step extends React.Component<StepProps, StepState> {
+export abstract class Step<S extends StepState> extends React.Component<StepProps, S> {
 
-    public onTerminated : (stepComponent : Step) => void = () => { console.log("Aïe"); };
+    public onTerminated : (stepComponent : Step<S>) => void = () => { console.log("Aïe"); };
 
-    protected constructor(props : StepProps) {
+    protected constructor(props : StepProps, defaultState : S) {
         super(props);
-        this.state = { active: false }; // Inactif par défaut
+        this.state = defaultState;
     }
 
     /**
@@ -34,10 +35,17 @@ export abstract class Step extends React.Component<StepProps, StepState> {
      */
     public activate() : void {
         console.info("[Step] Activation de l'étape " + this.props.code);
-        this.setState({active: true},
+        this.setState({active: true, activable: true},
             () => {
                 this.onActivation();
             });
+    }
+
+    /**
+     * Lorsque l'étape est activée
+     */
+    public markInactivable() : void {
+        this.setState({activable: false});
     }
 
     /**
@@ -50,6 +58,11 @@ export abstract class Step extends React.Component<StepProps, StepState> {
                 this.onDeactivation();
             });
     }
+
+    /**
+     * Indique si les conditions permettent d'activer le step
+     */
+    abstract canBeActivated(): boolean;
 
     /**
      * Appelé suite à désactivation

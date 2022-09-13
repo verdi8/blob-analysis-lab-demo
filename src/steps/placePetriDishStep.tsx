@@ -1,14 +1,18 @@
-import {Step, StepProps} from "./step";
+import {Step, StepProps, StepState} from "./step";
 import * as React from "react";
-import {Button} from "react-bootstrap";
+import {Alert, Button} from "react-bootstrap";
 
 /**
  * Étape de placement de la boîte de petri
  */
-export class PlacePetriDishStep extends Step {
+export class PlacePetriDishStep extends Step<StepState> {
 
     public constructor(props : StepProps) {
-        super(props);
+        super(props, { active: false, activable : false });
+    }
+
+    canBeActivated(): boolean {
+        return this.props.lab.data != null;
     }
 
     onActivation(): void {
@@ -18,19 +22,17 @@ export class PlacePetriDishStep extends Step {
 
     onDeactivation(): void {
         this.props.lab.petriDish.deactivate();
-
     }
 
     private zoomOnPetriDishCenter() : void {
-        if(this.props.lab.petriDish.coords != null) {
-            this.props.lab.zoomIn(this.props.lab.petriDish.coords.center);
-        }
+        this.props.lab.zoomIn(this.props.lab.data.petriDishCoords.center);
     }
 
     render() : React.ReactNode {
         return <div>
             <div>
-                <p>Déplacez la poignée jaune du centre pour déplacer le cercle, utilisez les poignées sur le cercle pour le redimensionner.</p>
+                <Alert show={!this.state.activable} variant="warning" className={"p-1"}>Veuillez charger une photo.</Alert>
+                <p>Déplacez et redimensionnez le cercle à l'aide des poignées blanches pour placer la boîte de petri.</p>
                 <p>Appuyez ici <Button disabled={!this.state.active} onClick={this.zoomOnPetriDishCenter.bind(this)} size={"sm"}><i className={"fa-solid fa-magnifying-glass-location"}></i></Button> pour placer la boîte de petri avec précision.</p>
                 <Button variant={"success"} disabled={!this.state.active} onClick={this.terminate.bind(this)}>C'est fait !</Button>
             </div>
