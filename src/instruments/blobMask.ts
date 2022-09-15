@@ -2,6 +2,7 @@ import * as paper from "paper";
 import {AbstractInstrument, Handle, Instrument} from "./instrument";
 import {PathCoords} from "../data/coords/pathCoords";
 import {Lab} from "../lab";
+import {EllipseFitter} from "../data/coords/transform/ellipseFitter";
 
 /**
  * Représente la boîte de Petri
@@ -17,6 +18,12 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
     drawIn(coords: PathCoords, group: paper.Group) {
         let line = coords.path.clone();
         group.addChild(line);
+
+        // Affiche la fitted ellipse
+        // if(line.length > 10) {
+        // const pathCoords = new PathCoords(line.clone());
+        // group.addChild(new EllipseFitter().getFittingEllipse(pathCoords).toPath());
+        // }
 
     }
 

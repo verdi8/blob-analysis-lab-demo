@@ -3,7 +3,9 @@
  */
 import {EllipseCoords} from "../ellipseCoords";
 import {Coords} from "../coords";
-
+import * as paper from "paper";
+import {types} from "sass";
+import Color = types.Color;
 const  HALFPI  : number= 1.5707963267949;
 
 /**
@@ -134,20 +136,30 @@ export class EllipseFitter {
             );
         }
 
-
+        path.fillColor = new paper.Color("red");
+        path.strokeColor = null;
+        const raster = path.rasterize({insert: false});
+        const imageData = raster.getImageData(new paper.Rectangle(0, 0, raster.width, raster.height));
+        const data = imageData.data;
+        const pixelRatio = paper.view.pixelRatio;
 
         for (let y = 0; y < this.height; y++) {
             bitcountOfLine = 0;
             xSumOfLine = 0;
+            let  offset = Math.round(y * pixelRatio) * this.width * 4;
             for (let x=0; x < this.width; x++) {
-                let point = new paper.Point(x + this.left, y + this.top)
-                if (point.getDistance(center) < minCenterDist
-                    || path.contains(point)) {
+
+                // let point = new paper.Point(x + this.left, y + this.top)
+                // if (point.getDistance(center) < minCenterDist
+                //     || path.contains(point)) {
+                if(data[offset + Math.round(x * pixelRatio) * 4] > 0 ) {
                     bitcountOfLine++;
                     xSumOfLine += x;
                     this.x2sum += x * x;
                 }
             }
+
+
             this.xsum += xSumOfLine;
             this.ysum += bitcountOfLine * y;
             ye = y;

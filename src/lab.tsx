@@ -275,6 +275,7 @@ export class Lab extends React.Component<{}> {
                                         <Button onClick={() => this.zoomFit()} variant={"primary"} size={"sm"}><i className="fa-regular fa-image"></i></Button>
                                         <Button onClick={() => this.zoomNone()} variant={"primary"} size={"sm"}>1:1</Button>
                                     </ButtonGroup>
+                                    <Form.Label className={"ms-3"}>[CTRL] + <i className="fa-solid fa-computer-mouse"></i> = <i className="fa-solid fa-arrows-up-down-left-right"></i></Form.Label>
                                 </Form.Group>
                             </Form>
                         </div>
