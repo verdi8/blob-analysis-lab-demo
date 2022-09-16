@@ -14,6 +14,7 @@ import {CircleCoords} from "./data/coords/circleCoords";
 import {PathCoords} from "./data/coords/pathCoords";
 import {DownloadStep} from "./steps/downloadStep";
 import {PaperUtils} from "./utils/paperUtils";
+import {EllipseCoords} from "./data/coords/ellipseCoords";
 
 export interface LabData {
 
@@ -25,7 +26,7 @@ export interface LabData {
 
     rulerCoords : VectorCoords,
 
-    petriDishCoords : CircleCoords,
+    petriDishCoords : EllipseCoords,
 
     blobMaskCoords : PathCoords
 }
@@ -148,7 +149,7 @@ export class Lab extends React.Component<{}> {
 
             rulerCoords: new VectorCoords(new paper.Point(width * 0.25, height / 2), new paper.Point(width * 0.75, height / 2)),
 
-            petriDishCoords: new CircleCoords(new paper.Point(width / 2, height / 2), width * 0.75 / 2),
+            petriDishCoords: new EllipseCoords(new paper.Point(width / 2, height / 2), width * 0.75 / 2, width * 0.75 / 2, 0),
 
             blobMaskCoords: new PathCoords(new paper.Path()),
 

@@ -6,7 +6,7 @@ import * as paper from "paper";
 
 export class EllipseCoords implements Coords {
 
-    public constructor(public center : paper.Point, public radiusX : number, public radiusY : number, public angle : number) {
+    public constructor(public center : paper.Point, public radiusX : number, public radiusY : number, public angle : number = 0) {
     }
 
     bounds(): paper.Rectangle {
@@ -14,13 +14,14 @@ export class EllipseCoords implements Coords {
     }
 
     toPath(): paper.Path {
-        let fittingEllipse = new paper.Path.Ellipse(new paper.Rectangle(
+        let path = new paper.Path.Ellipse(new paper.Rectangle(
                 new paper.Point(this.center.x - this.radiusX, this.center.y - this.radiusY),
                 new paper.Size(2 * this.radiusX, 2 * this.radiusY)
             )
         );
-        fittingEllipse.rotate(-this.angle);
-        return fittingEllipse;
+        path.rotate(this.angle);
+        path.remove();
+        return path;
     }
 
     /**
