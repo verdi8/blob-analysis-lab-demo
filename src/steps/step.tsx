@@ -23,7 +23,7 @@ export interface StepState {
  */
 export abstract class Step<S extends StepState> extends React.Component<StepProps, S> {
 
-    public onTerminated : (stepComponent : Step<S>) => void = () => { console.log("Aïe"); };
+    public onTerminated : (stepComponent : Step<S>) => void = () => { };
 
     protected constructor(props : StepProps, defaultState : S) {
         super(props);

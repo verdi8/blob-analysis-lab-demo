@@ -6,12 +6,14 @@ import {Coords} from "../coords";
 import * as paper from "paper";
 import {types} from "sass";
 import Color = types.Color;
+import {Transformation} from "./transformation";
+import {PathCoords} from "../pathCoords";
 const  HALFPI  : number= 1.5707963267949;
 
 /**
  * Adaptation de EllipseFitter.java de ImageJ
  */
-export class EllipseFitter {
+export class EllipseFitter implements Transformation<PathCoords, Coords>{
 
     private bitCount : number = 0;
     private xsum : number = 0;
@@ -31,7 +33,7 @@ export class EllipseFitter {
     private u11 : number = 0;  //central moments
     private record : boolean = false;
 
-    public getFittingEllipse(coords : Coords) : EllipseCoords {
+    transform(from: Coords): EllipseCoords {
 
         /** X centroid */
         let xCenter : number;
@@ -52,7 +54,7 @@ export class EllipseFitter {
         let  theta : number;
 
 
-        const path = coords.toPath();
+        const path = from.toPath();
         let  bounds = path.bounds;
         this.left = Math.round(bounds.x);
         this.top = Math.round(bounds.y);
@@ -111,7 +113,7 @@ export class EllipseFitter {
         xCenter = this.left + xoffset + 0.5;
         yCenter = this.top + yoffset + 0.5;
 
-        return new EllipseCoords(new paper.Point(xCenter, yCenter),  major / 2,  minor / 2, angle);
+        return new EllipseCoords(new paper.Point(xCenter, yCenter),  major / 2,  minor / 2, -angle);
     }
 
     private  computeSums (path : paper.Path)  : void {

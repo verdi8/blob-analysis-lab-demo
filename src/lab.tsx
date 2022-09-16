@@ -10,11 +10,15 @@ import {PetriDish} from "./instruments/petriDish";
 import {DrawBlobMaskStep} from "./steps/drawBlobMaskStep";
 import {BlobMask} from "./instruments/blobMask";
 import {VectorCoords} from "./data/coords/vectorCoords";
-import {CircleCoords} from "./data/coords/circleCoords";
 import {PathCoords} from "./data/coords/pathCoords";
 import {DownloadStep} from "./steps/downloadStep";
 import {PaperUtils} from "./utils/paperUtils";
 import {EllipseCoords} from "./data/coords/ellipseCoords";
+
+/**
+ * Debug mode (ou pas)
+ */
+export const DEBUG_MODE = false;
 
 export interface LabData {
 
@@ -210,14 +214,14 @@ export class Lab extends React.Component<{}> {
      * Plus de zoom
      */
     public zoomIn(target? : paper.Point) : void {
-        this.zoom(1.05, target);
+        this.zoom(1.10, target);
     }
 
     /**
      * Moins de zoom
      */
     public zoomOut(target? : paper.Point) : void {
-        this.zoom(0.95, target);
+        this.zoom(0.90, target);
     }
 
     /**
@@ -258,7 +262,6 @@ export class Lab extends React.Component<{}> {
         this.petriDish.refresh();
         this.blobMask.refresh();
     }
-
 
     render(): React.ReactNode {
         return <Container fluid={true} className={"vh-100 d-flex flex-column"}>

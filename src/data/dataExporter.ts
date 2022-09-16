@@ -3,7 +3,6 @@
  */
 import {LabData} from "../lab";
 import {EllipseFitter} from "./coords/transform/ellipseFitter";
-import {PathCoords} from "./coords/pathCoords";
 import {Coords} from "./coords/coords";
 import {MathUtils} from "../utils/mathUtils";
 
@@ -36,7 +35,7 @@ export class DataExporter {
 
         let linearScale = labData.rulerCoords.distance() / labData.rulerTickCount; // pixels/cm
         let areaScale = Math.pow(linearScale, 2);
-        let fittingEllipse = new EllipseFitter().getFittingEllipse(coords);
+        let fittingEllipse = new EllipseFitter().transform(coords);
 
         let line = 1;
         let label = labData.filename;

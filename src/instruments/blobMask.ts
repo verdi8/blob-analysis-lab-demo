@@ -1,13 +1,23 @@
 import * as paper from "paper";
 import {AbstractInstrument, Handle, Instrument} from "./instrument";
 import {PathCoords} from "../data/coords/pathCoords";
-import {Lab} from "../lab";
+import {DEBUG_MODE, Lab} from "../lab";
 import {EllipseFitter} from "../data/coords/transform/ellipseFitter";
 
 /**
  * Représente la boîte de Petri
  */
 export class BlobMask extends AbstractInstrument<PathCoords> implements Instrument {
+
+    /**
+     * Appelé lorsque le tracé est fermé
+     */
+    public onClosed : () => void = () => {};
+
+    /**
+     * Appelé lorsque le tracé s'ouvre
+     */
+    public onOpened : () => void = () => {};
 
     public constructor(protected lab : Lab, coords : PathCoords) {
         super(lab, coords, [
@@ -19,11 +29,12 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
         let line = coords.path.clone();
         group.addChild(line);
 
-        // Affiche la fitted ellipse
-        // if(line.length > 10) {
-        // const pathCoords = new PathCoords(line.clone());
-        // group.addChild(new EllipseFitter().getFittingEllipse(pathCoords).toPath());
-        // }
+        if(DEBUG_MODE) {
+            if(line.length > 10) {
+                const pathCoords = new PathCoords(line.clone());
+                group.addChild(new EllipseFitter().transform(pathCoords).toPath());
+            }
+        }
 
     }
 
@@ -59,7 +70,13 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
         if(!this.active) {
             return true;
         }
-        this.coords.path.add(event.point);
+        if(!this.coords.isClosed()) { // Une fois la boucle fermée, on ne peut plus ajouter de
+            this.coords.path.add(event.point)
+            if(this.coords.isClosed()) {
+                this.onClosed();
+            }
+        }
+
         this.refresh();
         return true;
     }
@@ -78,15 +95,26 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
      * Supprime quelques derniers points
      */
     public undo() {
-        this.coords.path.removeSegments(Math.max(this.coords.path.segments.length - 5, 0));
-        this.refresh();
+        this._undo(Math.max(this.coords.path.segments.length - 5, 0));
     }
 
     /**
-     * Supprime touy
+     * Supprime tout
      */
     public undoAll() {
-        this.coords.path.removeSegments();
+        this._undo(0);
+    }
+
+    /**
+     * En charge de la suppression
+     */
+    private _undo(from : number) {
+        let wasClosed = this.coords.isClosed();
+        this.coords.path.removeSegments(from);
+        if(wasClosed) {
+            this.onOpened();
+        }
         this.refresh();
     }
+
 }

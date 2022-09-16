@@ -19,7 +19,7 @@ export class DownloadButton extends React.Component<DownloadButtonProps, any> {
 
     render() : React.ReactNode {
         let faIcon = this.props.downloading ? "fa-solid fas fa-cog fa-spin" : "fa-solid fa-download";
-        let key = this.props.downloading ? "dl" : "notdl";
+        let key = this.props.downloading ? "downloading" : "notDownloading";
         return <Button key={key} onClick={this.props.onClick} disabled={this.props.disabled || this.props.downloading} variant={"primary"} size={"sm"}>
             <i className={faIcon}></i>
         </Button>

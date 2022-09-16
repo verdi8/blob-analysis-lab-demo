@@ -19,8 +19,8 @@ export class EllipseCoords implements Coords {
                 new paper.Size(2 * this.radiusX, 2 * this.radiusY)
             )
         );
-        path.rotate(this.angle);
         path.remove();
+        path.rotate(this.angle);
         return path;
     }
 

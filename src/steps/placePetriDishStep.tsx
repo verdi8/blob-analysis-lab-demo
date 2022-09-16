@@ -33,7 +33,7 @@ export class PlacePetriDishStep extends Step<StepState> {
             <div>
                 <Alert show={!this.state.activable} variant="warning" className={"p-1"}>Veuillez charger une photo.</Alert>
                 <p>Déplacez et redimensionnez le cercle à l'aide des poignées blanches pour placer la boîte de petri.</p>
-                <p>Appuyez ici <Button disabled={!this.state.active} onClick={this.zoomOnPetriDishCenter.bind(this)} size={"sm"}><i className={"fa-solid fa-magnifying-glass-location"}></i></Button> pour placer la boîte de petri avec précision.</p>
+                <Alert variant={"light"} className={"p-2"}><i className="ms-1 me-1 fa-solid fa-circle-info"></i>Cliquez ici <Button disabled={!this.state.active} onClick={this.zoomOnPetriDishCenter.bind(this)} size={"sm"}><i className={"fa-solid fa-magnifying-glass-location"}></i></Button> pour placer la boîte de petri avec précision.</Alert>
                 <Button variant={"success"} disabled={!this.state.active} onClick={this.terminate.bind(this)}>C'est fait !</Button>
             </div>
         </div>

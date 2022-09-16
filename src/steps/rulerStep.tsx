@@ -33,7 +33,7 @@ export class RulerStep extends Step<StepState> {
             <div>
                 <Alert show={!this.state.activable} variant="warning" className={"p-1"}>Veuillez charger une photo.</Alert>
                 <p>Positionnez la règle sur la photo. La règle doit couvrir 9 cm.</p>
-                <p>Appuyez ici <Button disabled={!this.state.active} onClick={this.zoomOnRuler.bind(this)} size={"sm"}><i className={"fa-solid fa-magnifying-glass-location"}></i></Button> pour placer la règle avec précision.</p>
+                <Alert variant={"light"} className={"p-2"}><i className="ms-1 me-1 fa-solid fa-circle-info"></i> Appuyez ici <Button disabled={!this.state.active} onClick={this.zoomOnRuler.bind(this)} size={"sm"}><i className={"fa-solid fa-magnifying-glass-location"}></i></Button> pour placer la règle avec précision.</Alert>
                 <Button variant={"success"} disabled={!this.state.active} onClick={this.terminate.bind(this)}>Terminé !</Button>
             </div>
         </div>
