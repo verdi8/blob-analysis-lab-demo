@@ -2,9 +2,11 @@
  * Utilitaire d'export des données
  */
 import {LabData} from "../lab";
-import {EllipseFitter} from "./coords/transform/ellipseFitter";
+import {ToEllipseFitter} from "./coords/transform/toEllipseFitter";
 import {Coords} from "./coords/coords";
 import {MathUtils} from "../utils/mathUtils";
+import {ToConvexHull} from "./coords/transform/toConvexHull";
+import {PathCoords} from "./coords/pathCoords";
 
 const ROUNDING_DECIMALS = 3;
 
@@ -14,14 +16,11 @@ export class DataExporter {
      * Transforme un Path en CSV
      */
     public exportPathAsXYCsv(coords : Coords, close : boolean) : string {
-        const path = coords.toPath();
-        if(close) {
-            path.closePath();
-        }
+        const path = coords.toRemovedPath();
         let data = "";
-        for (let i = 0; i < path.length; i++) {
-            let point = path.getPointAt(i);
-            data += Math.round(point.x) + "\t" + Math.round(point.y) + "\n";
+        for (let i = 0; i < path.segments.length; i++) {
+            let segment = path.segments[i];
+            data += Math.round(segment.point.x) + "\t" + Math.round(segment.point.y) + "\n";
         }
         return data;
     }
@@ -29,13 +28,14 @@ export class DataExporter {
     /**
      * Transforme un Path en CSV
      */
-    public exportPathDescriptorsAsCsv(labData : LabData, coords : Coords) : string {
-        let path = coords.toPath();
+    public exportPathDescriptorsAsCsv(labData : LabData, coords : PathCoords) : string {
+        let path = coords.toRemovedPath();
         path.closePath();
 
         let linearScale = labData.rulerCoords.distance() / labData.rulerTickCount; // pixels/cm
         let areaScale = Math.pow(linearScale, 2);
-        let fittingEllipse = new EllipseFitter().transform(coords);
+        let fittingEllipse = new ToEllipseFitter().transform(coords);
+        let convexHull = new ToConvexHull().transform(coords);
 
         let line = 1;
         let label = labData.filename;
@@ -44,7 +44,7 @@ export class DataExporter {
         let circularity = 4 * Math.PI * area / Math.pow(perimeter, 2);
         let ar = fittingEllipse.getMajorAxis() / fittingEllipse.getMinorAxis();
         let round = 4 * area / (Math.PI * fittingEllipse.getMajorAxis());
-        let solid = "todo";
+        let solid = area / (convexHull.toRemovedPath().area / areaScale);
 
         let headers : string[] = [ " ", "Label", "Area", "Perim.", "Circ.","AR","Round","Solidity"];
         let data = [ line,
@@ -54,7 +54,7 @@ export class DataExporter {
             MathUtils.round(circularity, ROUNDING_DECIMALS),
             MathUtils.round(ar, ROUNDING_DECIMALS),
             MathUtils.round(round, ROUNDING_DECIMALS),
-            solid,
+            MathUtils.round(solid, ROUNDING_DECIMALS),
         ]
 
         return headers.join(",") + "\n" + data.join(",");

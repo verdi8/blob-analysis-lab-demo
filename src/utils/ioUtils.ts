@@ -4,6 +4,29 @@
 export class IoUtils {
 
     /**
+     * Ouvre un chargement
+     */
+    public static openTextFile(onTextLoad : (text: string) => void) : void {
+        let input : HTMLInputElement = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.txt';
+        input.onchange = (e: InputEvent)  => {
+            // getting a hold of the file reference
+            var file = (e.target as HTMLInputElement).files[0];
+
+            // setting up the reader
+            let reader = new FileReader();
+            reader.readAsText(file,'UTF-8');
+            // here we tell the reader what to do when it's done reading...
+            reader.onload = readerEvent => {
+                onTextLoad(readerEvent.target.result as string);
+            }
+
+        }
+        input.click();
+    }
+
+    /**
      * Donne le nom de fichier sans extension
      */
     public static basename(filename : string) : string {

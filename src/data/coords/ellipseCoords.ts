@@ -10,10 +10,10 @@ export class EllipseCoords implements Coords {
     }
 
     bounds(): paper.Rectangle {
-        return this.toPath().bounds;
+        return this.toRemovedPath().bounds;
     }
 
-    toPath(): paper.Path {
+    toRemovedPath(): paper.Path {
         let path = new paper.Path.Ellipse(new paper.Rectangle(
                 new paper.Point(this.center.x - this.radiusX, this.center.y - this.radiusY),
                 new paper.Size(2 * this.radiusX, 2 * this.radiusY)

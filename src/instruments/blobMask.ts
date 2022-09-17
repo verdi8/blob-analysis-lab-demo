@@ -2,7 +2,9 @@ import * as paper from "paper";
 import {AbstractInstrument, Handle, Instrument} from "./instrument";
 import {PathCoords} from "../data/coords/pathCoords";
 import {DEBUG_MODE, Lab} from "../lab";
-import {EllipseFitter} from "../data/coords/transform/ellipseFitter";
+import {ToEllipseFitter} from "../data/coords/transform/toEllipseFitter";
+import {PaperUtils} from "../utils/paperUtils";
+import {ToConvexHull} from "../data/coords/transform/toConvexHull";
 
 /**
  * Représente la boîte de Petri
@@ -10,14 +12,19 @@ import {EllipseFitter} from "../data/coords/transform/ellipseFitter";
 export class BlobMask extends AbstractInstrument<PathCoords> implements Instrument {
 
     /**
+     * Garde l'état fermé ou pas
+     */
+    private wasClosed: boolean = false;
+
+    /**
      * Appelé lorsque le tracé est fermé
      */
-    public onClosed : () => void = () => {};
+    public onClose : () => void = () => {};
 
     /**
      * Appelé lorsque le tracé s'ouvre
      */
-    public onOpened : () => void = () => {};
+    public onOpen : () => void = () => {};
 
     public constructor(protected lab : Lab, coords : PathCoords) {
         super(lab, coords, [
@@ -26,14 +33,38 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
     }
 
     drawIn(coords: PathCoords, group: paper.Group) {
-        let line = coords.path.clone();
+        let line = coords.toRemovedPath();
         group.addChild(line);
+    }
+
+    /**
+     * Surcharge pour gérer l'état fermé ouvert du tracé
+     */
+    refresh() {
+        super.refresh();
+        let isClosed = this.coords.isClosed();
+        if(!this.wasClosed && isClosed) {
+            this.onClose();
+
+        } else if(this.wasClosed && !isClosed) {
+            this.onOpen();
+        }
+        this.wasClosed = isClosed;
 
         if(DEBUG_MODE) {
-            if(line.length > 10) {
-                const pathCoords = new PathCoords(line.clone());
-                group.addChild(new EllipseFitter().transform(pathCoords).toPath());
+            if(this.drawGroup.bounds.area > 10) {
+                let fittedEllipse = new ToEllipseFitter().transform(this.coords).toRemovedPath();
+                fittedEllipse.strokeColor = new paper.Color("red");
+                fittedEllipse.strokeWidth = PaperUtils.absoluteDimension(2);
+                fittedEllipse.dashArray = [10, 12];
+                this.drawGroup.addChild(fittedEllipse);
             }
+
+            let convexHull = new ToConvexHull().transform(this.coords).toRemovedPath();
+            convexHull.strokeColor = new paper.Color("red");
+            convexHull.strokeWidth = PaperUtils.absoluteDimension(2);
+            convexHull.dashArray = [10, 12];
+            this.drawGroup.addChild(convexHull);
         }
 
     }
@@ -44,10 +75,10 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
 
     locateHandle(coords: PathCoords, handle: Handle): paper.Point {
         if(handle.name == "startHandle") {
-            if(coords.path.isEmpty()) {
+            if(coords.points.length == 0) {
                 return null;
             } else {
-                return coords.path.firstSegment.point;
+                return coords.points[0];
             }
         }
         throw new Error("Unknown handle");
@@ -71,12 +102,8 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
             return true;
         }
         if(!this.coords.isClosed()) { // Une fois la boucle fermée, on ne peut plus ajouter de
-            this.coords.path.add(event.point)
-            if(this.coords.isClosed()) {
-                this.onClosed();
-            }
+            this.coords.points.push(event.point)
         }
-
         this.refresh();
         return true;
     }
@@ -95,7 +122,7 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
      * Supprime quelques derniers points
      */
     public undo() {
-        this._undo(Math.max(this.coords.path.segments.length - 5, 0));
+        this._undo(Math.max(this.coords.points.length - 5, 0));
     }
 
     /**
@@ -109,11 +136,7 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
      * En charge de la suppression
      */
     private _undo(from : number) {
-        let wasClosed = this.coords.isClosed();
-        this.coords.path.removeSegments(from);
-        if(wasClosed) {
-            this.onOpened();
-        }
+        this.coords.points = this.coords.points.slice(0, from);
         this.refresh();
     }
 

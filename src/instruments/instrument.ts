@@ -1,7 +1,8 @@
 import * as paper from "paper";
-import {Lab} from "../lab";
+import {DEBUG_MODE, Lab} from "../lab";
 import {Coords} from "../data/coords/coords";
 import {PaperUtils} from "../utils/paperUtils";
+import {ToEllipseFitter} from "../data/coords/transform/toEllipseFitter";
 
 /**
  * Un instrument d'analyse
@@ -59,7 +60,7 @@ export abstract class AbstractInstrument<C extends Coords> implements Instrument
     /**
      * Contient le dessin de l'instrument
      */
-    private drawGroup : paper.Group = new paper.Group();
+    protected drawGroup : paper.Group = new paper.Group();
 
     protected constructor(protected lab : Lab, protected coords : C,  protected handles : Handle[]) {
     }

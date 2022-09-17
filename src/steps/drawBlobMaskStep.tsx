@@ -1,6 +1,10 @@
 import {Step, StepProps, StepState} from "./step";
 import * as React from "react";
+import * as paper from "paper";
 import {Alert, Button} from "react-bootstrap";
+import {IoUtils} from "../utils/ioUtils";
+import {DEBUG_MODE} from "../lab";
+import {StringUtils} from "../utils/stringUtils";
 
 
 interface DrawBlobMaskStepState extends StepState {
@@ -24,10 +28,10 @@ export class DrawBlobMaskStep extends Step<DrawBlobMaskStepState> {
 
     onActivation(): void {
         this.props.lab.blobMask.activate();
-        this.props.lab.blobMask.onClosed = () => {
+        this.props.lab.blobMask.onClose = () => {
             this.setState({closed: true });
         };
-        this.props.lab.blobMask.onOpened = () => {
+        this.props.lab.blobMask.onOpen = () => {
             this.setState({closed: false });
         };
         this.props.lab.zoomOn( this.props.lab.data.petriDishCoords.bounds(), 0.05);
@@ -35,6 +39,23 @@ export class DrawBlobMaskStep extends Step<DrawBlobMaskStepState> {
 
     onDeactivation(): void {
         this.props.lab.blobMask.deactivate();
+    }
+
+    loadData(): void {
+        IoUtils.openTextFile(
+            (text : string) => {
+                console.info("text loaded")
+                this.props.lab.data.blobMaskCoords.points = [];
+                let lines = StringUtils.splitLines(text);
+                lines.filter(line => line.trim().length > 0).forEach(
+                    (line : string) => {
+                        let [x, y] = line.split("\t");
+                        this.props.lab.data.blobMaskCoords.points.push(new paper.Point(Number(x), Number(y)));
+                    }
+                );
+                // this.props.lab.data.blobMaskCoords.points.push(this.props.lab.data.blobMaskCoords.points[0]);
+                this.props.lab.blobMask.refresh();
+            });
     }
 
     render() : React.ReactNode {
@@ -49,6 +70,13 @@ export class DrawBlobMaskStep extends Step<DrawBlobMaskStepState> {
                 <Button className={"col-3"} variant={"success"} disabled={!this.state.active || !this.state.closed} onClick={this.terminate.bind(this)}>
                     <span hidden={!this.state.closed}><i className="fa-solid fa-hands-clapping fa-beat-fade me-2"></i></span>Fini !
                 </Button>
+                {DEBUG_MODE ?
+                    <Button className={"ms-2 col-4"} variant={"danger"} disabled={!this.state.active}
+                            onClick={this.loadData.bind(this)}>
+                        <i className="fa-solid fa-bug"></i> Charger XY
+                    </Button>
+                    : <></>
+                }
             </div>
         </div>
     }

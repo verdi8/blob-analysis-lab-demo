@@ -14,7 +14,7 @@ export class CircleCoords implements Coords {
         return new paper.Rectangle(this.center.x - this.radius, this.center.y - this.radius, this.radius * 2, this.radius * 2);
     }
 
-    toPath(): paper.Path {
+    toRemovedPath(): paper.Path {
         return new paper.Path.Circle(this.center, this.radius);
     }
 

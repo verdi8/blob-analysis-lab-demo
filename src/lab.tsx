@@ -18,10 +18,9 @@ import {EllipseCoords} from "./data/coords/ellipseCoords";
 /**
  * Debug mode (ou pas)
  */
-export const DEBUG_MODE = false;
+export const DEBUG_MODE = true;
 
 export interface LabData {
-
     pictureSize : paper.Size,
 
     filename : string,
@@ -144,7 +143,6 @@ export class Lab extends React.Component<{}> {
         let width = image.naturalWidth;
         let height = image.naturalHeight;
         this.data = {
-
             pictureSize: new paper.Size(width, height),
 
             filename: filename,
@@ -155,8 +153,7 @@ export class Lab extends React.Component<{}> {
 
             petriDishCoords: new EllipseCoords(new paper.Point(width / 2, height / 2), width * 0.75 / 2, width * 0.75 / 2, 0),
 
-            blobMaskCoords: new PathCoords(new paper.Path()),
-
+            blobMaskCoords: new PathCoords(),
         };
 
         // Le plus en dessous en premier
@@ -258,9 +255,9 @@ export class Lab extends React.Component<{}> {
      * Appelé lorsque le zoom a changé
      */
     private onZoomChanged() {
-        this.ruler.refresh();
-        this.petriDish.refresh();
-        this.blobMask.refresh();
+        this.ruler?.refresh();
+        this.petriDish?.refresh();
+        this.blobMask?.refresh();
     }
 
     render(): React.ReactNode {

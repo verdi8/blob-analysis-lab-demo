@@ -83,10 +83,8 @@ export class DownloadStep extends Step<DownloadStepState> {
      * Téléchargement des données du mask
      */
     private downloadBlobMaskData() : void {
-        let path = new paper.Path(this.props.lab.data.blobMaskCoords.path.segments);
-        path.closed = true; // ferme le contour
         let data = this.dataExporter.exportPathAsXYCsv(this.props.lab.data.blobMaskCoords, true);
-        IoUtils.downloadData(this.state.petriDishDataFilename, "text/plain;charset=UTF-8", data);
+        IoUtils.downloadData(this.state.blobMaskDataFilename, "text/plain;charset=UTF-8", data);
     }
 
     /**
@@ -100,7 +98,7 @@ export class DownloadStep extends Step<DownloadStepState> {
 
         renderingGroup.addChild(background)
 
-        let path = this.props.lab.data.blobMaskCoords.toPath();
+        let path = this.props.lab.data.blobMaskCoords.toRemovedPath();
         path.closed = true;
         path.fillColor = new paper.Color("white");
         path.strokeColor = null;

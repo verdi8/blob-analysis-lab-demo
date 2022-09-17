@@ -1,4 +1,5 @@
 import * as paper from "paper";
+import {PathCoords} from "./pathCoords";
 
 
 /**
@@ -15,5 +16,6 @@ export interface Coords {
     /**
      * Un paper.Path representatif des coodonnées
      */
-    toPath() : paper.Path;
+    toRemovedPath() : paper.Path;
+
 }

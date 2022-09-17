@@ -18,7 +18,7 @@ export class PetriDish extends AbstractInstrument<EllipseCoords> implements Inst
     }
 
     drawIn(coords : EllipseCoords, group: paper.Group) {
-        group.addChild(coords.toPath());
+        group.addChild(coords.toRemovedPath());
     }
 
     onHandleMove(coords: EllipseCoords, handle: Handle, point: paper.Point, delta: paper.Point): void {

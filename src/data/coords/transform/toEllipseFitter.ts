@@ -13,7 +13,7 @@ const  HALFPI  : number= 1.5707963267949;
 /**
  * Adaptation de EllipseFitter.java de ImageJ
  */
-export class EllipseFitter implements Transformation<PathCoords, Coords>{
+export class ToEllipseFitter implements Transformation<PathCoords, Coords>{
 
     private bitCount : number = 0;
     private xsum : number = 0;
@@ -54,7 +54,7 @@ export class EllipseFitter implements Transformation<PathCoords, Coords>{
         let  theta : number;
 
 
-        const path = from.toPath();
+        const path = from.toRemovedPath();
         let  bounds = path.bounds;
         this.left = Math.round(bounds.x);
         this.top = Math.round(bounds.y);
@@ -113,7 +113,7 @@ export class EllipseFitter implements Transformation<PathCoords, Coords>{
         xCenter = this.left + xoffset + 0.5;
         yCenter = this.top + yoffset + 0.5;
 
-        return new EllipseCoords(new paper.Point(xCenter, yCenter),  major / 2,  minor / 2, -angle);
+        return new EllipseCoords(new paper.Point(xCenter, yCenter),  major / 2,  minor / 2, angle);
     }
 
     private  computeSums (path : paper.Path)  : void {

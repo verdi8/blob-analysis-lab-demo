@@ -22,7 +22,7 @@ export class VectorCoords implements Coords {
         return this.end.subtract(this.start);
     }
 
-    toPath(): paper.Path {
+    toRemovedPath(): paper.Path {
         return new paper.Path.Line(this.start, this.end);
     }
 
