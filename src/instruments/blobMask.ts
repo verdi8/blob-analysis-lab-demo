@@ -51,7 +51,7 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
         }
         this.wasClosed = isClosed;
 
-        if(DEBUG_MODE) {
+        if(DEBUG_MODE) { // Traces les contours convexes et fitted ellipse
             if(this.drawGroup.bounds.area > 10) {
                 let fittedEllipse = new ToEllipseFitter().transform(this.coords).toRemovedPath();
                 fittedEllipse.strokeColor = new paper.Color("red");
@@ -89,6 +89,7 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
      */
     public onActivation() {
         if(!this.lab.raster.data.blobMaskAttached) {
+            this.lab.raster.on("mousedown", this.onMouseDown.bind(this));
             this.lab.raster.on("mousedrag", this.onMouseDrag.bind(this));
             this.lab.raster.data.blobMaskAttached = true;
         }
@@ -97,18 +98,35 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
     /**
      * Lorsque quelque chose est déplacé de la règle
      */
+    private addMousePoint(point : paper.Point) {
+        if(!this.coords.isClosed()) { // Une fois la boucle fermée, on ne peut plus ajouter de
+            this.coords.points.push(point)
+            this.refresh();
+        }
+        return true;
+    }
+
+    private onMouseDown(event : paper.MouseEvent) : boolean {
+        if(!this.active) {
+            return true;
+        }
+        this.addMousePoint(event.point);
+        return true;
+    }
+
+    /**
+     * Déplacement de la souris
+     */
     private onMouseDrag(event : paper.MouseEvent) : boolean {
         if(!this.active) {
             return true;
         }
-        if(!this.coords.isClosed()) { // Une fois la boucle fermée, on ne peut plus ajouter de
-            this.coords.points.push(event.point)
-        }
-        this.refresh();
+        this.addMousePoint(event.point);
         return true;
     }
 
-    protected fillColor(active: boolean, coords : PathCoords): paper.Color | null {
+
+    protected override fillColor(active: boolean, coords : PathCoords): paper.Color | null {
         if(coords.isClosed()) {
             let fillColor = active ? new paper.Color("yellow") : new paper.Color("olive");
             fillColor.alpha = 0.5;
