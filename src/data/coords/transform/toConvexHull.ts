@@ -8,7 +8,7 @@ enum Orientation {
 }
 
 /**
- * Génère une coque convexe
+ * Génère un contour convexe
  * Jarvis’s Algorithm or Wrapping
  * @see https://www.geeksforgeeks.org/convex-hull-set-1-jarviss-algorithm-or-wrapping/
  */

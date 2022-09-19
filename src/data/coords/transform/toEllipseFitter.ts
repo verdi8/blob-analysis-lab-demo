@@ -113,7 +113,7 @@ export class ToEllipseFitter implements Transformation<PathCoords, Coords>{
         xCenter = this.left + xoffset + 0.5;
         yCenter = this.top + yoffset + 0.5;
 
-        return new EllipseCoords(new paper.Point(xCenter, yCenter),  major / 2,  minor / 2, angle);
+        return new EllipseCoords(new paper.Point(xCenter, yCenter),  major / 2,  minor / 2, -angle);
     }
 
     private  computeSums (path : paper.Path)  : void {
@@ -148,19 +148,18 @@ export class ToEllipseFitter implements Transformation<PathCoords, Coords>{
         for (let y = 0; y < this.height; y++) {
             bitcountOfLine = 0;
             xSumOfLine = 0;
-            let  offset = Math.round(y * pixelRatio) * this.width * 4;
+            let  offset = Math.round(y * pixelRatio) * raster.width * 4;
             for (let x=0; x < this.width; x++) {
 
                 // let point = new paper.Point(x + this.left, y + this.top)
                 // if (point.getDistance(center) < minCenterDist
                 //     || path.contains(point)) {
-                if(data[offset + Math.round(x * pixelRatio) * 4] > 0 ) {
+                if(data[data.byteOffset + offset + Math.round(x * pixelRatio) * 4] > 0 ) {
                     bitcountOfLine++;
                     xSumOfLine += x;
                     this.x2sum += x * x;
                 }
             }
-
 
             this.xsum += xSumOfLine;
             this.ysum += bitcountOfLine * y;
