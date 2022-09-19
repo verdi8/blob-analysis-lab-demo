@@ -18,7 +18,7 @@ import {EllipseCoords} from "./data/coords/ellipseCoords";
 /**
  * Debug mode (ou pas)
  */
-export const DEBUG_MODE = true;
+export const DEBUG_MODE = false;
 
 export interface LabData {
     pictureSize : paper.Size,
