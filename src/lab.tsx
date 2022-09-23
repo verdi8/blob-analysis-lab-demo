@@ -115,6 +115,12 @@ export class Lab extends React.Component<{}> {
             }
         }
 
+        // Prise en compte du redimensionnement navigateur (ou agrandissement/retrécissement de la vue)
+        paper.view.onResize = (event) => {
+            if(this.raster != null) {
+                paper.view.center = this.raster.position;
+            }
+        }
 
         // this.canvas.width  = this.canvas.offsetWidth;
         // this.canvas.height = this.canvas.offsetHeight;
@@ -214,6 +220,8 @@ export class Lab extends React.Component<{}> {
         this.zoom(1.10, target);
     }
 
+    // Zooms par delta
+
     /**
      * Moins de zoom
      */
@@ -236,7 +244,7 @@ export class Lab extends React.Component<{}> {
         let oldZoom = paper.view.zoom;
         let newZoom = oldZoom * zoomFactor;
 
-        if(typeof target !== "undefined") {
+        if(target != undefined) {
             // let viewPosition = paper.view.viewToProject(target);
             let viewPosition = target;
             let mpos = viewPosition;
@@ -247,7 +255,17 @@ export class Lab extends React.Component<{}> {
 
             paper.view.center = paper.view.center.add(offset);
         }
-        paper.view.zoom = newZoom;
+
+        // On borne les zooms pour ne pas que ça parte partout
+        // Zoom minimum = zoom fit
+        let minZoom =  0;
+        if(this.data != null) {
+            let xZoomFactor = Math.min(1, this.canvas.width / this.data.pictureSize.width)
+            let yZoomFactor = Math.min(1, this.canvas.height / this.data.pictureSize.height);
+            minZoom = Math.min(xZoomFactor, yZoomFactor)  / paper.view.pixelRatio;
+        }
+        let maxZoom =  10;
+        paper.view.zoom = Math.min(maxZoom, Math.max(newZoom, minZoom));
         this.onZoomChanged();
     }
 
