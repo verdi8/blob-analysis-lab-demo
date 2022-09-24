@@ -15,7 +15,21 @@ export class DataExporter {
     /**
      * Transforme un Path en CSV
      */
-    public exportPathAsXYCsv(coords : Coords, close : boolean) : string {
+    public exportPathPointsAsXYCsv(coords : Coords, close : boolean) : string {
+        const path = coords.toRemovedPath();
+        let data = "";
+        for (let i = 0; i < path.length; i++) {
+            let point = path.getPointAt(i);
+            data += Math.round(point.x) + "\t" + Math.round(point.y) + "\n";
+        }
+        return data;
+    }
+
+
+    /**
+     * Transforme un Path en CSV par segments
+     */
+    public exportPathSegmentsAsXYCsv(coords : Coords, close : boolean) : string {
         const path = coords.toRemovedPath();
         let data = "";
         for (let i = 0; i < path.segments.length; i++) {

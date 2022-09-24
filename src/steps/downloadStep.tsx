@@ -75,7 +75,7 @@ export class DownloadStep extends Step<DownloadStepState> {
      * Téléchargement des données de la boîte de Petri
      */
     private downloadPetriDishData() : void {
-        let data = this.dataExporter.exportPathAsXYCsv(this.props.lab.data.petriDishCoords, true);
+        let data = this.dataExporter.exportPathPointsAsXYCsv(this.props.lab.data.petriDishCoords, true);
         IoUtils.downloadData(this.state.petriDishDataFilename, "text/plain;charset=UTF-8", data);
     }
 
@@ -83,7 +83,7 @@ export class DownloadStep extends Step<DownloadStepState> {
      * Téléchargement des données du mask
      */
     private downloadBlobMaskData() : void {
-        let data = this.dataExporter.exportPathAsXYCsv(this.props.lab.data.blobMaskCoords, true);
+        let data = this.dataExporter.exportPathSegmentsAsXYCsv(this.props.lab.data.blobMaskCoords, true);
         IoUtils.downloadData(this.state.blobMaskDataFilename, "text/plain;charset=UTF-8", data);
     }
 
