@@ -153,7 +153,7 @@ export class Lab extends React.Component<{}> {
 
             filename: filename,
 
-            rulerTickCount : 9,
+            rulerTickCount : 10,
 
             rulerCoords: new VectorCoords(new paper.Point(width * 0.25, height / 2), new paper.Point(width * 0.75, height / 2)),
 
