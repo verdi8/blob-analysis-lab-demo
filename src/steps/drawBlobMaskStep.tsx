@@ -71,7 +71,7 @@ export class DrawBlobMaskStep extends Step<DrawBlobMaskStepState> {
                     <span hidden={!this.state.closed}><i className="fa-solid fa-hands-clapping fa-beat-fade me-2"></i></span>Fini !
                 </Button>
                 {DEBUG_MODE ?
-                    <Button className={"ms-2 col-4"} variant={"danger"} disabled={!this.state.active}
+                    <Button className={"ms-2 col-5"} variant={"danger"} disabled={!this.state.active}
                             onClick={this.loadData.bind(this)}>
                         <i className="fa-solid fa-bug"></i> Charger XY
                     </Button>
