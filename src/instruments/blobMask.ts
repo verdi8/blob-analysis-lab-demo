@@ -64,6 +64,7 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
             convexHull.strokeColor = new paper.Color("red");
             convexHull.strokeWidth = PaperUtils.absoluteDimension(2);
             convexHull.dashArray = [10, 12];
+            convexHull.closed = true;
             this.drawGroup.addChild(convexHull);
         }
 
