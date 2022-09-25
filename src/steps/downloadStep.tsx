@@ -4,6 +4,7 @@ import {Alert, Button, InputGroup} from "react-bootstrap";
 import {IoUtils} from "../utils/ioUtils";
 import {DataExporter} from "../data/dataExporter";
 import * as paper from "paper";
+import {ImageDataWrapper, Rgba} from "../render/ImageDataWrapper";
 
 export interface DownloadButtonProps {
     downloading: boolean,
@@ -91,21 +92,13 @@ export class DownloadStep extends Step<DownloadStepState> {
      * Téléchargement des données du mask
      */
     private downloadBlobMask() : void {
-        let renderingGroup = new paper.Group();
-        let background = new paper.Path.Rectangle(new paper.Point(0,0), this.props.lab.data.pictureSize);
-        background.fillColor = new paper.Color("black");
-        background.strokeColor = null;
-
-        renderingGroup.addChild(background)
-
         let path = this.props.lab.data.blobMaskCoords.toRemovedPath();
         path.closed = true;
         path.fillColor = new paper.Color("white");
         path.strokeColor = null;
-        renderingGroup.addChild(path)
-        renderingGroup.scale(1 / paper.view.pixelRatio);
+        path.scale(1 / paper.view.pixelRatio, path.bounds.point);
 
-        let raster = renderingGroup.rasterize({ insert: false});
+        let raster = path.rasterize({ insert: false});
         raster.smoothing = "off";
 
         var newCanvas = document.createElement('canvas');
@@ -113,15 +106,25 @@ export class DownloadStep extends Step<DownloadStepState> {
         newCanvas.width = w;
         const h = this.props.lab.data.pictureSize.height;
         newCanvas.height = h;
-        var newContext = newCanvas.getContext('2d');
-        newContext.drawImage(raster.canvas, 0, 0, w, h, 0, 0, w, h);
 
-        // raster.getSubRaster(new paper.Rectangle(new paper.Point(0,0), this.props.lab.data.pictureSize));
+        var newContext = newCanvas.getContext('2d');
+        newContext.fillStyle = "black";
+        newContext.fillRect(0, 0, newCanvas.width, newCanvas.height);
+        newContext.drawImage(raster.canvas, path.bounds.x - 0.5, path.bounds.y - 0.5);
+
+        // Re-aliasing
+        const imageDataWrapper = new ImageDataWrapper(newContext.getImageData(0, 0, w, h));
+
+        // Supprime les nuances de gris en se basant sur la valeur rouge (on est sur d'avoir du gris)
+        imageDataWrapper.apply((rgba: Rgba) => {
+            let l = rgba.r >= 128 ? 255 : 0;
+            // let l = rgba.r == 255 ? 255 : 0;
+            return {r: l, g: l, b: l, a: 255};
+        }).andStore(newContext);
+
         IoUtils.downloadDataUrl(this.state.blobMaskFilename, newCanvas.toDataURL("image/png"));
 
         newCanvas.remove();
-
-        renderingGroup.remove();
     }
 
     /**
