@@ -129,11 +129,14 @@ export class DataExporter {
         let line = 1;
         let label = labData.filename;
         let area = path.area / areaScale;
+        let convexArea = convexHull.toRemovedPath().area / areaScale;
         let perimeter = path.length / linearScale;
+        let major = fittingEllipse.getMajorAxis() / linearScale;
+        let minor = fittingEllipse.getMinorAxis() / linearScale;
         let circularity = 4 * Math.PI * area / Math.pow(perimeter, 2);
-        let ar = fittingEllipse.getMajorAxis() / fittingEllipse.getMinorAxis();
-        let round = 4 * area / (Math.PI * fittingEllipse.getMajorAxis());
-        let solid = area / (convexHull.toRemovedPath().area / areaScale);
+        let ar = major / minor;
+        let round = (4 * area) / (Math.PI * major * major);
+        let solid = area / convexArea;
 
         let headers : string[] = [ " ", "Label", "Area", "Perim.", "Circ.","AR","Round","Solidity"];
         let data = [ line,
