@@ -101,10 +101,10 @@ export class DownloadStep extends Step<DownloadStepState> {
         let raster = path.rasterize({ insert: false});
         raster.smoothing = "off";
 
-        var newCanvas = document.createElement('canvas');
-        const w = this.props.lab.data.pictureSize.width;
+        let newCanvas = document.createElement('canvas');
+        let w = this.props.lab.data.pictureSize.width;
         newCanvas.width = w;
-        const h = this.props.lab.data.pictureSize.height;
+        let h = this.props.lab.data.pictureSize.height;
         newCanvas.height = h;
 
         var newContext = newCanvas.getContext('2d');
