@@ -110,7 +110,7 @@ export class DownloadStep extends Step<DownloadStepState> {
         var newContext = newCanvas.getContext('2d');
         newContext.fillStyle = "black";
         newContext.fillRect(0, 0, newCanvas.width, newCanvas.height);
-        newContext.drawImage(raster.canvas, path.bounds.x - 0.5, path.bounds.y - 0.5);
+        newContext.drawImage(raster.canvas, path.bounds.x, path.bounds.y);
 
         // Re-aliasing
         const imageDataWrapper = new ImageDataWrapper(newContext.getImageData(0, 0, w, h));
