@@ -128,8 +128,8 @@ export class DataExporter {
 
         let line = 1;
         let label = labData.filename;
-        let area = path.area / areaScale;
-        let convexArea = convexHull.toRemovedPath().area / areaScale;
+        let area = Math.abs(path.area) / areaScale;
+        let convexArea = Math.abs(convexHull.toRemovedPath().area) / areaScale;
         let perimeter = path.length / linearScale;
         let major = fittingEllipse.getMajorAxis() / linearScale;
         let minor = fittingEllipse.getMinorAxis() / linearScale;
