@@ -11,7 +11,6 @@ dom.i2svg();
 dom.watch();
 
 // Init de paper.js
-import '../node_modules/paper/dist/paper-core';
 import * as paper from "paper";
 
 // Create an empty project and a view for the canvas:
@@ -20,7 +19,6 @@ paper.install(window);
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 import { Lab } from './lab';
-
 
 ReactDOM.render(
     <React.StrictMode>

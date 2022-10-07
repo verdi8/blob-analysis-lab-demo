@@ -1,5 +1,6 @@
 const path = require('path');
 const webpackCommonJs = require('webpack');
+const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -11,11 +12,6 @@ module.exports = {
                 use: 'ts-loader',
                 exclude: /node_modules/,
             },
-            // {
-            //     test: /\.css$/,
-            //     use: ['style-loader', 'css-loader'],
-            //     // exclude: /node_modules/
-            // },
             {
                 test: /\.svg$/,
                 use: 'svg-inline-loader?classPrefix=true'
@@ -33,9 +29,6 @@ module.exports = {
                         }
                     },
                     {
-                        loader: 'resolve-url-loader'
-                    },
-                    {
                         loader: 'sass-loader'
                     }
                 ]
@@ -46,15 +39,23 @@ module.exports = {
         extensions: ['.css', '.js', '.ts', '.tsx']
     },
     plugins: [
+        new webpackCommonJs.DefinePlugin({
+            VERSION: JSON.stringify(require("./package.json").version),
+        }),
+        // Page principale
         new HtmlWebpackPlugin({
-            title: 'Blob Analysis Lab Demo',
+            title: 'Blob Analysis Lab',
             template: 'index.html',
+            filename: 'index.html',
             scriptLoading: 'blocking',
             favicon: "favicon.ico"
         }),
-        new webpackCommonJs.DefinePlugin({
-            VERSION: JSON.stringify(require("./package.json").version),
-        })
+        new CopyPlugin({
+            patterns: [
+                "docs/**/*.*"
+            ]
+        }),
+
     ],
     output: {
         filename: 'blob-analysis-lab-demo.js',
