@@ -1,6 +1,9 @@
 # blob-analysis-lab-demo
 Un projet temporaire qick'n'dirty de démo d'analyse de photos de blobs
 
+## Mod'Op
+[Mode opératoire](docs/README.md)
+
 ## Commandes
 * `npm run serve` : lancer un serveur pour tests en local
 * `npm build -- --config webpack.staging.js` : construction pour tests
