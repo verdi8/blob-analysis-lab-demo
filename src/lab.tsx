@@ -1,19 +1,21 @@
 import * as React from 'react';
 import * as paper from "paper";
-import {StepManager} from "./steps/stepManager";
-import {LoadPictureStep} from "./steps/loadPictureStep";
-import {RulerStep} from "./steps/rulerStep";
-import {Button, ButtonGroup, Container, Form, Navbar, Row} from "react-bootstrap";
+import {StepManager} from "./ui/steps/stepManager";
+import {LoadPictureStep} from "./ui/steps/loadPictureStep";
+import {RulerStep} from "./ui/steps/rulerStep";
+import {Badge, Button, ButtonGroup, Col, Container, Form, Navbar, Row} from "react-bootstrap";
 import {Ruler} from "./instruments/ruler";
-import {PlacePetriDishStep} from "./steps/placePetriDishStep";
+import {PlacePetriDishStep} from "./ui/steps/placePetriDishStep";
 import {PetriDish} from "./instruments/petriDish";
-import {DrawBlobMaskStep} from "./steps/drawBlobMaskStep";
+import {DrawBlobMaskStep} from "./ui/steps/drawBlobMaskStep";
 import {BlobMask} from "./instruments/blobMask";
 import {VectorCoords} from "./data/coords/vectorCoords";
 import {PathCoords} from "./data/coords/pathCoords";
-import {DownloadStep} from "./steps/downloadStep";
+import {DownloadStep} from "./ui/steps/downloadStep";
 import {PaperUtils} from "./utils/paperUtils";
 import {EllipseCoords} from "./data/coords/ellipseCoords";
+import Here from "./assets/images/here.svg";
+import {Welcome} from "./ui/welcome";
 
 /**
  * Debug mode (ou pas)
@@ -49,6 +51,11 @@ export class Lab extends React.Component<{}> {
      * Le canvas sur lequel est dessiné la photo
      */
     private canvas : HTMLCanvasElement | null = null;
+
+    /**
+     * Le canvas sur lequel est dessiné la photo
+     */
+    private welcome = React.createRef<Welcome>();
 
     /**
      * La photo du blob
@@ -121,9 +128,6 @@ export class Lab extends React.Component<{}> {
                 paper.view.center = this.raster.position;
             }
         }
-
-        // this.canvas.width  = this.canvas.offsetWidth;
-        // this.canvas.height = this.canvas.offsetHeight;
     }
 
     /**
@@ -138,6 +142,9 @@ export class Lab extends React.Component<{}> {
                 return false;
             }
         }
+
+        // Masque le composant d'accueil
+        this.welcome.current.setState({visible: false });
 
         // Init du Raster de l'image
         this.raster = new paper.Raster();
@@ -282,9 +289,9 @@ export class Lab extends React.Component<{}> {
         return <Container fluid={true} className={"vh-100 d-flex flex-column"}>
             <Navbar bg="light" expand="lg" className={"p-0"}>
                 <Container fluid={true}>
-                    <Row className={"col-md-8"}>
+                    <Row className={"col-md-12"}>
                         <div className="d-flex d-flex justify-content-between">
-                            <Navbar.Brand className={"p-0"}><i className={"fa-solid fa-flask me-2"}></i>Blob Analysis Lab Demo</Navbar.Brand>
+                            <Navbar.Brand className={"p-0"}><i className={"fa-solid fa-flask me-2"}></i>Blob Analysis Lab <sup><Badge pill bg="secondary" text="primary">démo</Badge></sup></Navbar.Brand>
                             <Form className={"inline-form"}>
                                 <Form.Group controlId="zoomGroup">
                                     <Form.Label>Zoom :</Form.Label>
@@ -297,15 +304,19 @@ export class Lab extends React.Component<{}> {
                                     <Form.Label className={"ms-3"}>[CTRL] + <i className="fa-solid fa-computer-mouse"></i> = <i className="fa-solid fa-arrows-up-down-left-right"></i></Form.Label>
                                 </Form.Group>
                             </Form>
+                            <div>
+                                <Button href={"docs/index.html"} target="_blank" variant={"primary"} size={"sm"}>Tutoriel<i className="ms-2 fa-solid fa-book"></i></Button>
+                            </div>
                         </div>
                     </Row>
                 </Container>
             </Navbar>
             <Row className="flex-grow-1">
-                <div className="col">
+                <div className="col position-relative">
+                   <Welcome ref={this.welcome}/>
                     <canvas ref={(canvas : HTMLCanvasElement)=> this.canvas = canvas} data-paper-resize="false"  className="h-100 w-100 d-block" onContextMenu={() => false}></canvas>
                 </div>
-                <div className="col-md-4 border-2">
+                <Col md={4} className={"border-2"}  >
                     <div className="mb-3">
                         <StepManager>
                             <LoadPictureStep lab={this} code="loadPicture" title="Charger une photo"/>
@@ -315,7 +326,7 @@ export class Lab extends React.Component<{}> {
                             <DownloadStep  lab={this} code="download" title="Télécharger les résultats"/>
                         </StepManager>
                     </div>
-                </div>
+                </Col>
             </Row>
         </Container>
     }

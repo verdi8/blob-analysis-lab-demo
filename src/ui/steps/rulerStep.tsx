@@ -1,7 +1,7 @@
 import {Step, StepProps, StepState} from "./step";
 import * as React from "react";
 import {Alert, Button, Form, InputGroup} from "react-bootstrap";
-import {DEBUG_MODE} from "../lab";
+import {DEBUG_MODE} from "../../lab";
 
 /**
  * Etape de placement de la règle

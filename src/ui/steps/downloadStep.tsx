@@ -1,10 +1,10 @@
 import {Step, StepProps, StepState} from "./step";
 import * as React from "react";
 import {Alert, Button, InputGroup} from "react-bootstrap";
-import {IoUtils} from "../utils/ioUtils";
-import {DataExporter} from "../data/dataExporter";
+import {IoUtils} from "../../utils/ioUtils";
+import {DataExporter} from "../../data/dataExporter";
 import * as paper from "paper";
-import {ImageDataWrapper, Rgba} from "../render/ImageDataWrapper";
+import {ImageDataWrapper, Rgba} from "../../render/ImageDataWrapper";
 
 export interface DownloadButtonProps {
     downloading: boolean,

@@ -1,8 +1,8 @@
 # Mode opératoire
 ## Présentation
-**Cet outil vous accompagne**  - pas à pas - dans **l'analyse des photos de blobs**, afin de fournir les mesures nécessaires à l'apprentissage du _Machine Learning_. 
+**Cet outil vous accompagne**  - pas à pas - dans **l'analyse des photos de blobs**, afin de fournir les données nécessaires à l'apprentissage du _Machine Learning_. 
 
-L'analyse se déroule en **4 étapes** :
+L'analyse se déroule en **5 étapes** :
 
 [1. Charger une photo](#Étape-1-charger-une-photo) <br>
 [2. Positionner la règle](#Étape-2-positioner-la-règle) <br>

@@ -2,9 +2,9 @@ import {Step, StepProps, StepState} from "./step";
 import * as React from "react";
 import * as paper from "paper";
 import {Alert, Button} from "react-bootstrap";
-import {IoUtils} from "../utils/ioUtils";
-import {DEBUG_MODE} from "../lab";
-import {StringUtils} from "../utils/stringUtils";
+import {IoUtils} from "../../utils/ioUtils";
+import {DEBUG_MODE} from "../../lab";
+import {StringUtils} from "../../utils/stringUtils";
 
 
 interface DrawBlobMaskStepState extends StepState {

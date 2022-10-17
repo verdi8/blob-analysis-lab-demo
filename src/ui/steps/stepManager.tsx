@@ -4,7 +4,7 @@
 import {Step, StepState} from "./step";
 import * as React from "react";
 import {ReactElement, RefObject} from "react";
-import {ArrayUtils} from "../utils/arrayUtils";
+import {ArrayUtils} from "../../utils/arrayUtils";
 import {Accordion} from "react-bootstrap";
 
 /**
