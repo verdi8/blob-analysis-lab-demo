@@ -1,4 +1,3 @@
-
 import {Coords} from "../coords";
 
 /**

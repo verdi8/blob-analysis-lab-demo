@@ -5,10 +5,10 @@ import {EllipseCoords} from "../ellipseCoords";
 import {Coords} from "../coords";
 import * as paper from "paper";
 import {types} from "sass";
-import Color = types.Color;
 import {Transformation} from "./transformation";
 import {PathCoords} from "../pathCoords";
 import {ImageDataWrapper} from "../../../render/ImageDataWrapper";
+
 const  HALFPI  : number= 1.5707963267949;
 
 /**

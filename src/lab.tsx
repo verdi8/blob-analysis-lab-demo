@@ -14,7 +14,6 @@ import {PathCoords} from "./data/coords/pathCoords";
 import {DownloadStep} from "./ui/steps/downloadStep";
 import {PaperUtils} from "./utils/paperUtils";
 import {EllipseCoords} from "./data/coords/ellipseCoords";
-import Here from "./assets/images/here.svg";
 import {Welcome} from "./ui/welcome";
 
 /**

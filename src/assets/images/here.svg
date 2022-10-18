@@ -1,18 +1,6 @@
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 131.05070243472312 88.27716039866368">
-    <!-- svg-source:excalidraw -->
+    <!-- arrow by excalidraw -->
 
-    <defs>
-        <style>
-            @font-face {
-            font-family: "Virgil";
-            src: url("https://excalidraw.com/Virgil.woff2");
-            }
-            @font-face {
-            font-family: "Cascadia";
-            src: url("https://excalidraw.com/Cascadia.woff2");
-            }
-        </style>
-    </defs>
     <rect x="0" y="0" width="131.05070243472312" height="88.27716039866368" fill="none"></rect>
     <g stroke-linecap="round">
         <g transform="translate(44.48445506720407 42.18917581060259) rotate(0 36.96977789509731 -15.50219226513667)">
@@ -29,7 +17,7 @@
         </g>
     </g>
     <g transform="translate(10 52.27716039866368) rotate(0 34.5 13)">
-        <text x="34.5" y="19" font-family="Virgil, Segoe UI Emoji" font-size="20px" text-anchor="middle" fill="black"
+        <text x="34.5" y="19" font-family="Indie Flower" font-size="20px" text-anchor="middle" fill="black"
               style="white-space: pre;" direction="ltr">départ
         </text>
     </g>

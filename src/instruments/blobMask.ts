@@ -119,6 +119,9 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
      * Déplacement de la souris
      */
     private onMouseDrag(event : paper.MouseEvent) : boolean {
+        if(event.modifiers) {
+
+        }
         if(!this.active) {
             return true;
         }

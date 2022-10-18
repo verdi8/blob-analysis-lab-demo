@@ -1,5 +1,4 @@
 import * as paper from "paper";
-import {PathCoords} from "./pathCoords";
 
 
 /**

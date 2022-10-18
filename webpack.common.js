@@ -12,13 +12,13 @@ module.exports = {
                 use: 'ts-loader',
                 exclude: /node_modules/,
             },
-            // {
-            //     test: /\.svg$/,
-            //     use: 'svg-inline-loader?classPrefix=true'
-            // },
             {
                 test: /\.svg$/,
                 use: ['@svgr/webpack'],
+            },
+            {
+                test: /\.woff(2)?$/,
+                type: 'asset/inline',
             },
             {
                 test: /\.(css|scss)$/,
@@ -40,7 +40,7 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.css', '.js', '.ts', '.tsx']
+        extensions: ['.js', '.ts', '.tsx']
     },
     plugins: [
         new webpackCommonJs.DefinePlugin({

@@ -1,4 +1,3 @@
-
 import * as paper from "paper";
 import {Coords} from "./coords";
 

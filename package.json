@@ -1,7 +1,7 @@
 {
   "name": "@verdi8/blob-analysis-lab-demo",
   "version": "1.0.0",
-  "description": "Un projet temporaire qick'n'dirty de démo d'analyse de photos de blobs",
+  "description": "Un projet éphémère d'analyse de photos de blobs",
   "private": true,
   "scripts": {
     "serve": "webpack serve --open --config webpack.staging.js",
@@ -48,6 +48,7 @@
     "sass-loader": "^13.1.0",
     "style-loader": "^2.0.0",
     "svg-inline-loader": "^0.8.2",
+    "terser-webpack-plugin": "^5.3.6",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.7.0",
     "typescript": "^4.8.2",

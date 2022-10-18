@@ -1,8 +1,7 @@
 import * as paper from "paper";
-import {DEBUG_MODE, Lab} from "../lab";
+import {Lab} from "../lab";
 import {Coords} from "../data/coords/coords";
 import {PaperUtils} from "../utils/paperUtils";
-import {ToEllipseFitter} from "../data/coords/transform/toEllipseFitter";
 
 /**
  * Un instrument d'analyse
