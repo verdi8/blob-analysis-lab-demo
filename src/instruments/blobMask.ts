@@ -19,14 +19,17 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
     /**
      * Appelé lorsque le tracé est fermé
      */
-    public onClose : () => void = () => {};
+    public onClose: () => void = () => {
+    };
 
     /**
      * Appelé lorsque le tracé s'ouvre
      */
-    public onOpen : () => void = () => {};
+    public onOpen: () => void = () => {
+    };
 
-    public constructor(protected lab : Lab, coords : PathCoords) {
+
+    public constructor(protected lab: Lab, coords: PathCoords) {
         super(lab, coords, [
             new Handle("startHandle", true),
         ])
@@ -43,16 +46,16 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
     refresh() {
         super.refresh();
         let isClosed = this.coords.isClosed();
-        if(!this.wasClosed && isClosed) {
+        if (!this.wasClosed && isClosed) {
             this.onClose();
 
-        } else if(this.wasClosed && !isClosed) {
+        } else if (this.wasClosed && !isClosed) {
             this.onOpen();
         }
         this.wasClosed = isClosed;
 
-        if(DEBUG_MODE) { // Traces les contours convexes et fitted ellipse
-            if(this.drawGroup.bounds.area > 10) {
+        if (DEBUG_MODE) { // Traces les contours convexes et fitted ellipse
+            if (this.drawGroup.bounds.area > 10) {
                 let fittedEllipse = new ToEllipseFitter().transform(this.coords).toRemovedPath();
                 fittedEllipse.strokeColor = new paper.Color("red");
                 fittedEllipse.strokeWidth = PaperUtils.absoluteDimension(2);
@@ -75,8 +78,8 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
     }
 
     locateHandle(coords: PathCoords, handle: Handle): paper.Point {
-        if(handle.name == "startHandle") {
-            if(coords.points.length == 0) {
+        if (handle.name == "startHandle") {
+            if (coords.points.length == 0) {
                 return null;
             } else {
                 return coords.points[0];
@@ -89,7 +92,7 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
      * Attacher le handler lors de l'activation
      */
     public onActivation() {
-        if(!this.lab.raster.data.blobMaskAttached) {
+        if (!this.lab.raster.data.blobMaskAttached) {
             this.lab.raster.on("mousedown", this.onMouseDown.bind(this));
             this.lab.raster.on("mousedrag", this.onMouseDrag.bind(this));
             this.lab.raster.data.blobMaskAttached = true;
@@ -99,19 +102,19 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
     /**
      * Lorsque quelque chose est déplacé de la règle
      */
-    private addMousePoint(point : paper.Point) {
-        if(!this.coords.isClosed()) { // Une fois la boucle fermée, on ne peut plus ajouter de
+    private addMousePoint(point: paper.Point) {
+        if (!this.coords.isClosed()) { // Une fois la boucle fermée, on ne peut plus ajouter de
             this.coords.points.push(point)
             this.refresh();
         }
         return true;
     }
 
-    private onMouseDown(event : paper.MouseEvent) : boolean {
-        if(!this.active) {
+    private onMouseDown(event: paper.MouseEvent): boolean {
+        if (!this.active) {
             return true;
         }
-        if(event.modifiers.control) {
+        if (event.modifiers.control) {
             return true; // On ne fait si CONTROL est pressé en dessinant
         }
         this.addMousePoint(event.point);
@@ -121,11 +124,11 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
     /**
      * Déplacement de la souris
      */
-    private onMouseDrag(event : paper.MouseEvent) : boolean {
-        if(!this.active) {
+    private onMouseDrag(event: paper.MouseEvent): boolean {
+        if (!this.active) {
             return true;
         }
-        if(event.modifiers.control) {
+        if (event.modifiers.control) {
             return true; // On ne fait si CONTROL est pressé en dessinant
         }
         this.addMousePoint(event.point);
@@ -133,14 +136,21 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
     }
 
 
-    protected override fillColor(active: boolean, coords : PathCoords): paper.Color | null {
-        if(coords.isClosed()) {
+    protected override fillColor(active: boolean, coords: PathCoords): paper.Color | null {
+        if (coords.isClosed()) {
             let fillColor = active ? new paper.Color("yellow") : new paper.Color("olive");
             fillColor.alpha = 0.5;
             return fillColor;
         } else {
             return null;
         }
+    }
+
+    /**
+     * Appelé lorsque le tracé est fermé
+     */
+    public isClosed() : boolean {
+        return this.coords.isClosed();
     }
 
     /**

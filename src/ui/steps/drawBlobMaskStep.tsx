@@ -28,6 +28,7 @@ export class DrawBlobMaskStep extends Step<DrawBlobMaskStepState> {
 
     onActivation(): void {
         this.props.lab.blobMask.activate();
+        this.setState({closed: this.props.lab.blobMask.isClosed() });
         this.props.lab.blobMask.onClose = () => {
             this.setState({closed: true });
         };
