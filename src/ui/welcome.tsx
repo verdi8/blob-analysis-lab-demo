@@ -21,7 +21,7 @@ export class Welcome extends React.Component<{}, WelcomeState>{
 
     public render() {
         return  <div hidden={!this.state.visible} className={"mt-4 col text-center position-absolute top-0 start-0 w-100"}>
-            <div className={"position-absolute top-0 end-0 col-2"}>
+            <div className={"position-absolute top-0 end-0 col-2 mt-5"}>
                 <Here></Here>
             </div>
             <h1 className={"text-warning"}>Bienvenue</h1>
