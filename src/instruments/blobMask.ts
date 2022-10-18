@@ -111,6 +111,9 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
         if(!this.active) {
             return true;
         }
+        if(event.modifiers.control) {
+            return true; // On ne fait si CONTROL est pressé en dessinant
+        }
         this.addMousePoint(event.point);
         return true;
     }
@@ -119,11 +122,11 @@ export class BlobMask extends AbstractInstrument<PathCoords> implements Instrume
      * Déplacement de la souris
      */
     private onMouseDrag(event : paper.MouseEvent) : boolean {
-        if(event.modifiers) {
-
-        }
         if(!this.active) {
             return true;
+        }
+        if(event.modifiers.control) {
+            return true; // On ne fait si CONTROL est pressé en dessinant
         }
         this.addMousePoint(event.point);
         return true;
