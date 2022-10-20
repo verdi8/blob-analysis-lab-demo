@@ -9,7 +9,7 @@ import {PaperUtils} from "../utils/paperUtils";
  */
 export class Ruler extends AbstractInstrument<VectorCoords> implements Instrument {
 
-    public constructor(protected lab : Lab, coords : VectorCoords, private tickCount : number) {
+    public constructor(protected lab : Lab, coords : VectorCoords) {
         super(lab, coords, [
             new Handle("startHandle", true),
             new Handle("endHandle", true)
@@ -18,10 +18,10 @@ export class Ruler extends AbstractInstrument<VectorCoords> implements Instrumen
 
     drawIn(coords : VectorCoords, group: paper.Group) {
         group.addChild(new paper.Path.Line(coords.start, coords.end));
-
+        let tickCount = this.lab.data.rulerTickCount;
         let vector = this.coords.asPointVector();
-        for (let i = 0; i < this.tickCount; i++) {
-            let tickCircle = new paper.Path.Circle(this.coords.start.add(vector.multiply(i / this.tickCount)), PaperUtils.absoluteDimension(1));
+        for (let i = 0; i < tickCount; i++) {
+            let tickCircle = new paper.Path.Circle(this.coords.start.add(vector.multiply(i / tickCount)), PaperUtils.absoluteDimension(1));
             group.addChild(tickCircle);
         }
 

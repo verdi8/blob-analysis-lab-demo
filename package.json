@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "serve": "webpack serve --open --config webpack.staging.js",
+    "test": "karma start --single-run",
     "build": "webpack"
   },
   "keywords": [],
@@ -38,6 +39,7 @@
     "jest-mock": "^29.1.2",
     "karma": "^6.4.1",
     "karma-chrome-launcher": "^3.1.1",
+    "karma-firefox-launcher": "^2.1.2",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.0.0",
     "karma-spec-reporter": "^0.0.34",

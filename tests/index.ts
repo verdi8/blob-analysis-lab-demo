@@ -9,4 +9,3 @@ canvas.width  = 1224;
 canvas.height = 768;
 
 paper.setup(canvas);
-console.log("canvas inited")

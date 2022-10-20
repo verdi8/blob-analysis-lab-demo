@@ -5,6 +5,7 @@ import {Alert, Button} from "react-bootstrap";
 import {IoUtils} from "../../utils/ioUtils";
 import {DEBUG_MODE} from "../../lab";
 import {StringUtils} from "../../utils/stringUtils";
+import {DataImporter} from "../../data/dataImporter";
 
 
 interface DrawBlobMaskStepState extends StepState {
@@ -43,18 +44,10 @@ export class DrawBlobMaskStep extends Step<DrawBlobMaskStepState> {
     }
 
     loadData(): void {
+        let dataImporter = new DataImporter();
         IoUtils.openTextFile(
             (text : string) => {
-                console.info("text loaded")
-                this.props.lab.data.blobMaskCoords.points = [];
-                let lines = StringUtils.splitLines(text);
-                lines.filter(line => line.trim().length > 0).forEach(
-                    (line : string) => {
-                        let [x, y] = line.split("\t");
-                        this.props.lab.data.blobMaskCoords.points.push(new paper.Point(Number(x), Number(y)));
-                    }
-                );
-                // this.props.lab.data.blobMaskCoords.points.push(this.props.lab.data.blobMaskCoords.points[0]);
+                this.props.lab.data.blobMaskCoords = dataImporter.import(text);
                 this.props.lab.blobMask.refresh();
             });
     }

@@ -1,6 +1,7 @@
 import * as React from "react";
 import Here from "../assets/images/here.svg";
 import {Button} from "react-bootstrap";
+import {StepProps} from "./steps/step";
 
 /**
  * L'état de l'affichage de l'accueil
@@ -14,8 +15,8 @@ export interface WelcomeState {
  */
 export class Welcome extends React.Component<{}, WelcomeState>{
 
-    public constructor() {
-        super({});
+    public constructor(props : {}) {
+        super(props);
         this.state = {visible: true}
     }
 

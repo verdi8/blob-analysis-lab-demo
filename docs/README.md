@@ -54,7 +54,10 @@ Pour s'assurer que 10 centimètres sont bien couverts, **les petits points "dét
 
 ![](images/ruler_pokayoke.png)
 
-Pour placer la règle avec plus de précision, utiliser le bouton ![Zoom règle](zoom_object.png) (en jaune ci-dessous).
+Si il y a moins de 10cm règle sur la photo, il est possible de modifier la taille à couvrir avec les boutons +/- (en bleu ci-dessous).
+Le nombre de détrompeurs sera ajusté.
+
+Pour placer la règle avec plus de précision, utiliser le bouton ![Zoom règle](images/zoom_object.png) (en jaune ci-dessous).
 
 ![](images/ruler_panel.png)
 
@@ -64,7 +67,7 @@ Une fois la règle placée, **passer à l'étape suivante en appuyant sur le bou
 
 ## Étape 3 : positionner la boîte de Petri
 
-Tout comme la règle, **placer la boîte de Petri à l'aide des poignées**, et utiliser le bouton ![Zoom boîte de Petri](zoom_object.png)
+Tout comme la règle, **placer la boîte de Petri à l'aide des poignées**, et utiliser le bouton ![Zoom boîte de Petri](images/zoom_object.png)
 pour la placer avec précision.
 
 ![](images/petri_handles.png)
@@ -106,7 +109,7 @@ Le bouton  ![](images/blob_done.png) s'active et permet de **passer à l'étape 
 
 ---
 
-## Étape 5 : Télécharger les résultats
+## Étape 5 : télécharger les résultats
 
 ![](images/download_panel.png)
 

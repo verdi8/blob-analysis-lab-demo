@@ -21,6 +21,22 @@ import {Welcome} from "./ui/welcome";
  */
 export const DEBUG_MODE = false;
 
+/**
+ * La taille par défaut de la règle
+ */
+export const DEFAULT_RULER_TICK_COUNT = 10;
+
+/**
+ * La taille minimum de la règle
+ */
+export const MIN_RULER_TICK_COUNT = 8;
+
+/**
+ * La taille maximum de la règle
+ */
+export const MAX_RULER_TICK_COUNT = 15;
+
+
 export interface LabData {
     pictureSize : paper.Size,
 
@@ -159,7 +175,7 @@ export class Lab extends React.Component<{}> {
 
             filename: filename,
 
-            rulerTickCount : 10,
+            rulerTickCount : DEFAULT_RULER_TICK_COUNT,
 
             rulerCoords: new VectorCoords(new paper.Point(width * 0.25, height / 2), new paper.Point(width * 0.75, height / 2)),
 
@@ -171,7 +187,7 @@ export class Lab extends React.Component<{}> {
         // Le plus en dessous en premier
         this.blobMask = new BlobMask(this, this.data.blobMaskCoords);
         this.petriDish = new PetriDish(this, this.data.petriDishCoords);
-        this.ruler = new Ruler(this, this.data.rulerCoords, this.data.rulerTickCount);
+        this.ruler = new Ruler(this, this.data.rulerCoords);
 
         // Zoom global
         this.zoomFit();
@@ -290,7 +306,7 @@ export class Lab extends React.Component<{}> {
                 <Container fluid={true}>
                     <Row className={"col-md-12"}>
                         <div className="d-flex d-flex justify-content-between">
-                            <Navbar.Brand className={"p-0"}><i className={"fa-solid fa-flask me-2"}></i>Blob Analysis Lab <sup><Badge pill bg="secondary" text="primary">démo</Badge></sup></Navbar.Brand>
+                            <Navbar.Brand className={"p-0"}><i className={"fa-solid fa-flask me-2"}></i>Blob Analysis Lab <sup><Badge pill bg="secondary" text="primary">demo</Badge></sup></Navbar.Brand>
                             <Form className={"inline-form"}>
                                 <Form.Group controlId="zoomGroup">
                                     <Form.Label>Zoom :</Form.Label>

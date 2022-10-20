@@ -2,8 +2,6 @@
 let webpackConfig = require('./webpack.staging.js');
 webpackConfig.entry = {};
 
-console.info(webpackConfig)
-
 module.exports = function(config) {
     config.set({
         basePath: '',
@@ -18,7 +16,7 @@ module.exports = function(config) {
         },
         plugins: [
             require('karma-jasmine'),
-            require('karma-chrome-launcher'),
+            require('karma-firefox-launcher'),
             require('karma-spec-reporter'),
             require('karma-jasmine-html-reporter'),
             require('karma-webpack'),
@@ -31,7 +29,7 @@ module.exports = function(config) {
 
         logLevel: config.LOG_INFO,
         autoWatch: true,
-        browsers: ['Chrome'],
+        browsers: ['Firefox'],
         client: {
             clearContext: false
         },

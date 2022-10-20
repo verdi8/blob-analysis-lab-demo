@@ -13,6 +13,10 @@ module.exports = {
                 exclude: /node_modules/,
             },
             {
+                test: /\.(txt|csv)/,
+                type: 'asset/source',
+            },
+            {
                 test: /\.svg$/,
                 use: ['@svgr/webpack'],
             },
