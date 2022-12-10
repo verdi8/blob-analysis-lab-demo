@@ -9,6 +9,7 @@ L'analyse se déroule en **5 étapes** :
 [3. Positionner la boîte de Petri](#Étape-3-positionner-la-boîte-de-petri) <br>
 [4. Détourer le blob à main levée](#Étape-4-détourer-le-blob) <br>
 [5. Télécharger les fichiers de mesures](#Étape-5-télécharger-les-résultats) <br>
+[5'. Fusionner les .csv ](#Étape-539-fusionner-les-csv)
 
 Chaque étape est décrite dans la partie droite du _lab_. Il est possible de revenir à tout moment
 en arrière en cliquant sur le titre de l'étape.
@@ -115,4 +116,33 @@ Le bouton  ![](images/blob_done.png) s'active et permet de **passer à l'étape 
 
 **Télécharger les fichiers un à un** avec ![](images/download_button.png).
 
-Les fichiers sont stockés dans le répertoire "Téléchargements" du navigateur, **les transmettre par [la plateforme de dépôt de données](https://blob.cnrs.fr/)**.  
+Les fichiers sont stockés dans le répertoire "Téléchargements" du navigateur.  
+
+> [!NOTE|label:Attention]
+> Ces fichiers ne peuvent pas être tout de suite déposés sur l'espace de dépôt des fichiers d'analyse (https://blob.cnrs.fr/).
+> 
+> En effet, le fichier _.csv_ généré ne contient que les mesures (aire, périmètre, circualirité, etc.) que pour la photo qui vient d'être analysée. 
+> Le nom du fichier contient le numéro du blob (par exemple: Results_ConJ1Ex*B3*.csv).
+> 
+> L'espace de dépôt des analyses n'attend qu'**un seul fichier** _.csv_ **pour toutes** les photos d'une séquence groupe/jour/expérience (par ex.: Results_ConJ1Ex.csv).
+> 
+> Une étape supplémentaire permet de regrouper les fichiers.
+
+## Étape 5' : fusionner les .csv
+
+> :gift: Pour 5 étapes effectuées une étape offerte !
+
+Un bouton dans l'étape 5 permet d'ouvrir l'outil de fusion des fichiers.
+
+![](images/fusion_button.png)
+
+Une fenêtre comme celle-ci s'affiche :
+
+![](images/fusion_dialog.png)
+
+Pas à pas : 
+1. \[encadré en vert] Sélectionner des fichiers à fusionner. Plusieurs fichiers peuvent être sélectionnés à la fois. Ils peuvent être sélectionnés en vrac mêmes s'ils font partie de séquences (groupe/jour/expérience) d'analyse différentes.
+2. \[marqué en rouge] Les fichiers sont automatiquement triés et regroupés par séquence (groupe/jour/expérience)
+3. \[entouré en jaune] Les fichiers résultats sont téléchargeables avec le bouton ![](images/download_button.png)
+
+Maintenant **les fichiers peuvent être transmis par [la plateforme de dépôt de données](https://blob.cnrs.fr/)**.

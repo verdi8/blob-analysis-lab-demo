@@ -47,7 +47,7 @@ export class DrawBlobMaskStep extends Step<DrawBlobMaskStepState> {
         let dataImporter = new DataImporter();
         IoUtils.openTextFile(
             (text : string) => {
-                this.props.lab.data.blobMaskCoords = dataImporter.import(text);
+                this.props.lab.data.blobMaskCoords = dataImporter.readPathCoords(text);
                 this.props.lab.blobMask.refresh();
             });
     }
