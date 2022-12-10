@@ -11,7 +11,7 @@ describe('Testing DataExporter...', () => {
 
     it('CSV metrics are correct', () => {
         let labData = Fixtures.labData();
-        let descriptorsCsv = dataExporter.exportPathDescriptorsAsCsv(labData, labData.blobMaskCoords);
+        let descriptorsCsv = dataExporter.exportPathDescriptorsAsCsv(labData);
         expect(descriptorsCsv).toEqual(expectedResultsCsv);
     });
 
@@ -23,7 +23,9 @@ describe('Testing DataExporter...', () => {
             labData.rulerCoords.end.subtract(labData.rulerCoords.start).multiply(8).divide(10)
         )
 
-        let descriptorsCsv = dataExporter.exportPathDescriptorsAsCsv(labData, labData.blobMaskCoords);
+        let descriptorsCsv = dataExporter.exportPathDescriptorsAsCsv(labData);
         expect(descriptorsCsv).toEqual(expectedResultsCsv);
     });
+
+
 });

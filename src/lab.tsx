@@ -15,6 +15,10 @@ import {DownloadStep} from "./ui/steps/downloadStep";
 import {PaperUtils} from "./utils/paperUtils";
 import {EllipseCoords} from "./data/coords/ellipseCoords";
 import {Welcome} from "./ui/welcome";
+import {DataImporter} from "./data/dataImporter";
+import {WorkInfo} from "./data/work/workInfo";
+import {IoUtils} from "./utils/ioUtils";
+import {WorkInfoParser} from "./data/work/process/workInfoParser";
 
 /**
  * Debug mode (ou pas)
@@ -38,9 +42,12 @@ export const MAX_RULER_TICK_COUNT = 15;
 
 
 export interface LabData {
+
     pictureSize : paper.Size,
 
     filename : string,
+
+    workInfo : WorkInfo,
 
     rulerTickCount : number,
 
@@ -91,6 +98,16 @@ export class Lab extends React.Component<{}> {
      * Le contour du blob
      */
     public blobMask: BlobMask;
+
+    /**
+     * Outil d'import de données
+     */
+    public dataImporter = new DataImporter();
+
+    /**
+     * Parsing du work in progress
+     */
+    public workInfoParser = new WorkInfoParser();
 
     public constructor(props : {}) {
         super(props);
@@ -150,6 +167,11 @@ export class Lab extends React.Component<{}> {
      */
     public new(image : HTMLImageElement, filename : string) : boolean {
         console.info("Nouvelle session de travail")
+        let workInfo = this.workInfoParser.parse(IoUtils.basename(filename));
+        if(workInfo == null) {
+            window.alert("Le nom du fichier ne respecte pas nomenclature")
+            return false;
+        }
         if(this.raster != null) {
             if(window.confirm("Écraser le travail en cours ?")) {
                 this.reset();
@@ -174,6 +196,8 @@ export class Lab extends React.Component<{}> {
             pictureSize: new paper.Size(width, height),
 
             filename: filename,
+
+            workInfo: workInfo,
 
             rulerTickCount : DEFAULT_RULER_TICK_COUNT,
 

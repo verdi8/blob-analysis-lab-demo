@@ -15,17 +15,23 @@ export class IoUtils {
             var file = (e.target as HTMLInputElement).files[0];
 
             // setting up the reader
-            let reader = new FileReader();
-            reader.readAsText(file,'UTF-8');
-            // here we tell the reader what to do when it's done reading...
-            reader.onload = readerEvent => {
-                onTextLoad(readerEvent.target.result as string);
-            }
+            this.readTextFile(file, onTextLoad)
 
         }
         input.click();
     }
 
+    /**
+     * Lit le texte dans un fichier
+     */
+    public static readTextFile(file: Blob, onTextLoad : (text: string) => void) : void {
+        let reader = new FileReader();
+        reader.readAsText(file,'UTF-8');
+        // here we tell the reader what to do when it's done reading...
+        reader.onload = readerEvent => {
+            onTextLoad(readerEvent.target.result as string);
+        }
+    }
     /**
      * Donne le nom de fichier sans extension
      */

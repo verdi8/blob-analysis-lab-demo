@@ -40,7 +40,7 @@ export class LoadPictureStep extends Step<StepState> {
     render() : React.ReactNode {
         return <div>
             <div className="mb-3">
-                <input className="form-control" type="file" disabled={!this.state.active} aria-disabled={!this.state.active} onChange={(e) => this.fileChanged(e)}></input>
+                <input className="form-control" type="file" accept={"image/*"} disabled={!this.state.active} aria-disabled={!this.state.active} onChange={(e) => this.fileChanged(e)}></input>
             </div>
         </div>
     }

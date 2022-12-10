@@ -1,10 +1,13 @@
 import {Step, StepProps, StepState} from "./step";
 import * as React from "react";
-import {Alert, Button, InputGroup} from "react-bootstrap";
+import {Alert, Anchor, Button, Col, InputGroup, Row} from "react-bootstrap";
 import {IoUtils} from "../../utils/ioUtils";
 import {DataExporter} from "../../data/dataExporter";
 import * as paper from "paper";
 import {ImageDataWrapper, Rgba} from "../../render/ImageDataWrapper";
+import {Merger} from "../merger";
+import {WorkInfoFormatter} from "../../data/work/process/workInfoFormatter";
+import {MeasurementExport} from "../../data/measurement/process/measurementExport";
 
 export interface DownloadButtonProps {
     downloading: boolean,
@@ -44,9 +47,20 @@ export interface DownloadStepState extends  StepState {
 export class DownloadStep extends Step<DownloadStepState> {
 
     /**
+     * Accès au dialog d'outil de merge
+     * @private
+     */
+    private mergerRef = React.createRef<Merger>();
+
+    /**
      * Outil d'export de données
      */
-    private dataExporter: DataExporter = new DataExporter();
+    private dataExporter = new DataExporter();
+
+    /**
+     * Outil d'export de données
+     */
+    private measureExport = new MeasurementExport();
 
     public constructor(props: StepProps) {
         super(props, { active: false, activable: false, petriDishDataFilename : null,  blobMaskDataFilename: null,  blobMaskFilename: null, resultsFilename: null, downloading: false });
@@ -65,7 +79,7 @@ export class DownloadStep extends Step<DownloadStepState> {
             petriDishDataFilename: IoUtils.basename(this.props.lab.data.filename) + "_Coord_Boite.txt",
             blobMaskDataFilename: IoUtils.basename(this.props.lab.data.filename) + "_Coord_Blob.txt",
             blobMaskFilename: IoUtils.basename(this.props.lab.data.filename) + "_Mask.png",
-            resultsFilename: "Results_" + IoUtils.basename(this.props.lab.data.filename) + ".csv",
+            resultsFilename: this.measureExport.exportDryMeasures(this.props.lab.data.workInfo).filename, // dry run juste pour le nom
         });
     }
 
@@ -132,9 +146,17 @@ export class DownloadStep extends Step<DownloadStepState> {
      */
     private downloadResults() : void {
         this.downloading( () => {
-            let data = this.dataExporter.exportPathDescriptorsAsCsv(this.props.lab.data, this.props.lab.data.blobMaskCoords);
+            let data = this.dataExporter.exportPathDescriptorsAsCsv(this.props.lab.data);
             IoUtils.downloadData(this.state.resultsFilename, "text/plain;charset=UTF-8", data);
         });
+    }
+
+    /**
+     * Ouvre l'outil de merge des fichiers CSV
+     * @private
+     */
+    private openMerger() {
+        this.mergerRef.current.show();
     }
 
     /**
@@ -148,6 +170,8 @@ export class DownloadStep extends Step<DownloadStepState> {
             },500);
         });
     }
+
+
 
     render() : React.ReactNode {
         return <div>
@@ -169,6 +193,13 @@ export class DownloadStep extends Step<DownloadStepState> {
                 <DownloadButton key="downloadResultsButtonKey" downloading={this.state.downloading} onClick={this.downloadResults.bind(this)} disabled={!this.state.active}></DownloadButton>
                 <InputGroup.Text className  ={"col"}>{ this.state.resultsFilename }</InputGroup.Text>
             </InputGroup>
+            <Row className="mb-1">
+                <Col>
+                    <Button key="mergerButtonKey"  onClick={this.openMerger.bind(this)}><i className="fa-solid fa-object-group me-2"></i>Etape 5' : fusionner les CSV</Button>
+                    <a className={"ms-1"}  href={"http://localhost:8081/docs/index.html#/"} target={"_blank"}>en savoir plus</a>
+                </Col>
+            </Row>
+            <Merger ref={this.mergerRef}></Merger>
         </div>
     }
 
