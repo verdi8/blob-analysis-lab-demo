@@ -94,7 +94,7 @@ export class DownloadStep extends Step<DownloadStepState> {
     private downloadBlobMask() : void {
         let path = this.props.lab.data.blobMaskCoords.toRemovedPath();
         path.closed = true;
-        path.fillColor = new paper.Color("white");
+        path.fillColor = new paper.Color("black");
         path.strokeColor = null;
         path.scale(1 / paper.view.pixelRatio, path.bounds.point);
 
@@ -108,9 +108,9 @@ export class DownloadStep extends Step<DownloadStepState> {
         newCanvas.height = h;
 
         var newContext = newCanvas.getContext('2d');
-        newContext.fillStyle = "black";
+        newContext.fillStyle = "white";
         newContext.fillRect(0, 0, newCanvas.width, newCanvas.height);
-        newContext.drawImage(raster.canvas, path.bounds.x, path.bounds.y);
+        newContext.drawImage(raster.canvas, path.bounds.x - 0.5, path.bounds.y - 0.5);
 
         // Re-aliasing
         const imageDataWrapper = new ImageDataWrapper(newContext.getImageData(0, 0, w, h));
