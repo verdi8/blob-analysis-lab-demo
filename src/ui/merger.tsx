@@ -47,7 +47,7 @@ export class Merger extends React.Component<{}, MergerState> {
      * Affiche l'outil de merge
      */
     public show() {
-        this.setState({visible: true});
+        this.setState({visible: true, measurementWorks: {}});
     }
 
     /**
@@ -68,6 +68,9 @@ export class Merger extends React.Component<{}, MergerState> {
                     let filename = file.name;
                     try {
                         let {work, measurements} = this.measurementImport.readMeasures(filename, text);
+                        if(work.blob == null) {
+                            throw new Error("Fichier " + filename + " :\nIl n'est pas possible de fusionner un fichier d'une séquence de blobs (le nom du fichier doit contenir un numéro de blob, par exemple Results_ExpJ2CrB2.csv)");
+                        }
                         let measurementWorks = this.measurementMerge.mergeInto(this.state.measurementWorks, filename, work, measurements);
                         this.setState({measurementWorks: measurementWorks});
                     } catch (error) {
@@ -102,7 +105,7 @@ export class Merger extends React.Component<{}, MergerState> {
             scrollable={true}
         >
             <Modal.Header closeButton={true} closeVariant={"white"}>
-                <Modal.Title as={"h6"}>Fusionner les CSV</Modal.Title>
+                <Modal.Title as={"h6"}><i className="fa-solid fa-object-group me-2"></i>Fusionner les CSV</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Alert className={"p-2"} variant={"success"}><b>A la fin de l'analyse d'une séquence de photos </b>, regroupez ici les fichiers .csv générés par photo (par ex.: <em>Results_ExpJ1CrB10.csv</em>) pour générer le fichier attendu dans l'espace blob (par ex.: <em>Results_ExpJ1Cr.csv</em>).</Alert>
@@ -118,24 +121,42 @@ export class Merger extends React.Component<{}, MergerState> {
                     <Col>
                         <b>Fichiers fusionnés :</b>
                         <ListGroup>
-                            {Object.keys(this.state.measurementWorks).map((workCode) => {
-                                return <ListGroup.Item key={workCode}>
-                                    <div className={"mb-2"}>
-                                        <span className={"ms-0"}><span className={"small text-dark"}>Groupe : </span><b>{this.state.measurementWorks[workCode].work.groupe == GroupeEnum.Experimental ? "Expérimental" : "Contrôle"}</b></span>
-                                        <span className={"ms-2"}><span className={"small text-dark"}>Jour : </span><b>{this.state.measurementWorks[workCode].work.jour}</b></span>
-                                        <span className={"ms-2"}><span className={"small text-dark"}>Expérience : </span><b>{this.state.measurementWorks[workCode].work.experience == ExperienceEnum.Exploration ? "Exploration" : "Croissance"}</b></span>
-                                    </div>
-                                    <div className={"mb-2"}>
-                                        { Object.keys(this.state.measurementWorks[workCode].files).map(value =><span key={value} className={"me-1 p-1 rounded border bg-light font-monospace"}>{value}</span>)}
-                                    </div>
-                                    <div className={"col-5"}>
-                                        <InputGroup size={"sm"}>
-                                            <DownloadButton downloading={false} disabled={false} onClick={() => {this.download(workCode)}}/>
-                                            <InputGroup.Text className={"col"}>{ that.measurementExport.exportDryMeasures(this.state.measurementWorks[workCode].work).filename }</InputGroup.Text>
-                                        </InputGroup>
-                                    </div>
-                                </ListGroup.Item>
-                            })}
+                            {
+                                Object.keys(this.state.measurementWorks).length == 0 ?
+                                    <>
+                                        <ListGroup.Item key={"nop1"}>
+                                            <div className={"bg-light"} style={ { height: "4rem"} }></div>
+                                        </ListGroup.Item>
+                                        <ListGroup.Item key={"nop2"}>
+                                            <div className={"bg-light"} style={ { height: "4rem"} }></div>
+                                        </ListGroup.Item>
+                                        <ListGroup.Item key={"nop3"}>
+                                            <div className={"bg-light"} style={ { height: "4rem"} }></div>
+                                        </ListGroup.Item>
+                                    </>
+                                    :
+                                    Object.keys(this.state.measurementWorks)
+                                        .sort()
+                                        .map((workCode) => {
+                                        return <ListGroup.Item key={workCode}>
+                                            <div className={"mb-2"}>
+                                                <span className={"ms-0"}><span className={"small text-dark"}>Groupe : </span><b>{this.state.measurementWorks[workCode].work.groupe == GroupeEnum.Experimental ? "Expérimental" : "Contrôle"}</b></span>
+                                                <span className={"ms-2"}><span className={"small text-dark"}>Jour : </span><b>{this.state.measurementWorks[workCode].work.jour}</b></span>
+                                                <span className={"ms-2"}><span className={"small text-dark"}>Expérience : </span><b>{this.state.measurementWorks[workCode].work.experience == ExperienceEnum.Exploration ? "Exploration" : "Croissance"}</b></span>
+                                            </div>
+                                            <div className={"mb-2"}>
+                                                { Object.keys(this.state.measurementWorks[workCode].files)
+                                                    .sort()
+                                                    .map(value =><span key={value} className={"me-1 p-1 rounded border bg-light font-monospace"}>{value}</span>)}
+                                            </div>
+                                            <div className={"col-5"}>
+                                                <InputGroup size={"sm"}>
+                                                    <DownloadButton downloading={false} disabled={false} onClick={() => {this.download(workCode)}}/>
+                                                    <InputGroup.Text className={"col"}>{ that.measurementExport.exportDryMeasures(this.state.measurementWorks[workCode].work).filename }</InputGroup.Text>
+                                                </InputGroup>
+                                            </div>
+                                        </ListGroup.Item>
+                                    })}
                         </ListGroup>
                     </Col>
                 </Row>

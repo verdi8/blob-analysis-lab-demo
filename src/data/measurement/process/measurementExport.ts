@@ -21,7 +21,9 @@ export class MeasurementExport {
         return {
             filename: "Results_" + this.workInfoFormatter.format(work) + ".csv",
             csv: csvFormatRows([[" ", "Label", "Area", "Perim.", "Circ.","AR","Round","Solidity"]]
-                .concat(measurements.map((measurement, i) =>
+                .concat(measurements
+                    .sort((m1, m2) => m1.label.localeCompare(m2.label))
+                    .map((measurement, i) =>
                     [ (i + 1).toString(),
                         measurement.label,
                         MathUtils.round(measurement.area, ROUNDING_DECIMALS).toString(),
