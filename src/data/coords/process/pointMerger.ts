@@ -1,7 +1,7 @@
 /**
  * Merge des point alignés horizontalement ou verticalement (4-connected)
  */
-class PointMerger {
+export class PointMerger {
 
     private startPoint: paper.Point | null;
     private endPoint: paper.Point | null;

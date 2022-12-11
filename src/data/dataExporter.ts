@@ -5,6 +5,7 @@ import {LabData} from "../lab";
 import {Coords} from "./coords/coords";
 import {MeasurementExport} from "./measurement/process/measurementExport";
 import {CoordsMeasurement} from "./coords/process/coordsMeasurement";
+import {PointMerger} from "./coords/process/pointMerger";
 
 export class DataExporter {
 
